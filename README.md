@@ -9,21 +9,25 @@
 
 ## 预览
 <p align="center">
-    <img src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-1.png" />
-    <img src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-2.png" />
-    <img src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-3.png" />
-    <img src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-4.png" />
-    <img src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-10.png" />
-    <img src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-11.png" />
-    <img src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-12.png" />
-    <img src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-13.png" />
-    <img src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-7.png" />
-    <img src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-6.png" />
+    <img width="380" src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-1.png" />
+    <img width="380" src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-2.png" />
+    <img width="380" src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-3.png" />
+    <img width="380" src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-4.png" />
+    <img width="380" src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-10.png" />
+    <img width="380" src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-11.png" />
+    <img width="380" src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-12.png" />
+    <img width="380" src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-13.png" />
+    <img width="380" src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-7.png" />
+    <img width="380" src="https://cdn.jsdelivr.net/gh/abcd498936590/pic@master/img/dart-cms-6.png" />
 </p>
 
-## Dart-Cms-Manage
+## Dart-Cms-Manage（后台）
 
 [后台管理系统部分(使用vue全家桶)](https://github.com/abcd498936590/Dart-Cms-Manage)
+
+## 插件
+
+开发插件，使用插件，下载插件 => [插件教程，插件开发，安装插件](https://github.com/abcd498936590/Dart-Cms-Script)
 
 ## 懒人部署
 
@@ -31,7 +35,6 @@
 
 ## 说明
 > 要求：nodejs >=7.6 mongodb >=3.4
-
 
 ## 安装
 
