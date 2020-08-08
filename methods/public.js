@@ -535,7 +535,7 @@ let getSearchData = async (config, ctx) => {
 	return data
 }
 // 单个分类数据
-let getCurNavData = async (config, ctx, next) => {
+let getCurNavData = async (config, ctx, next, isQuery = false) => {
 
 	let videoInfoColl = getDB().collection('video_info');
 	let otherColl = getDB().collection('other');
@@ -545,7 +545,7 @@ let getCurNavData = async (config, ctx, next) => {
 		isSwiperLen = await videoInfoColl.find({openSwiper: true, display: true}).count();
 	}
 
-	let nid = ctx.params.nid;
+	let nid = !isQuery ? ctx.params.nid : ctx.query.nid;
 	let newNid = new ObjectID(nid);
 
 	let curNavExist = (nid && nid.length === 24) ? await otherColl.findOne({_id: newNid, type: "nav_type", nav_type: 'video', parent_id: false, display: true}) : false;

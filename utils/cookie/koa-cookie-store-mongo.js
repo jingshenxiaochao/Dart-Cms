@@ -23,7 +23,7 @@ class MongoStore {
 
       console.log('cookie => session 数据库连接成功！');
 
-      this.coll = await db.createCollection(collection)
+      this.coll = await db.collection(collection);
       const isExist = await this.coll.indexExists(['session__idx'])
       const isExistIp = await this.coll.indexExists(['session__ip'])
       const isExistSid = await this.coll.indexExists(['session__sid'])

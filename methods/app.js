@@ -5,7 +5,7 @@ const fse = require('fs-extra');
 
 const getDB = require('../utils/baseConnect');
 const { setResponse, makeArrObjectID, mixinsScriptConfig, encryption, createTokenID, getBjDate, dirCatImgs, placeUploadImg } = require('../utils/tools');
-const { getAllMainData, getVideoDetill, getSearchData, getTypesData, createNavType } = require('./public');
+const { getAllMainData, getVideoDetill, getSearchData, getTypesData, createNavType, getCurNavData } = require('./public');
 
 // app入口数据
 let getTypeList = async (ctx, next) => {
@@ -32,107 +32,13 @@ let getCurNavItemList = async (ctx, next) => {
 	let confColl = getDB().collection('config');
 	let config = await confColl.findOne({});
 
-	let { Id="0" } = ctx.query;
-	Id = (typeof Id === 'string' && Id.length === 24) ? Id : false;
-	let promise,
-	rowData = {};
-
-	let isSwiperLen = 0;
-	if(config.openSwiper){
-		isSwiperLen = await videoInfoColl.find({openSwiper: true, display: true}).count();
-	}
-
-	let pipeFn = async (match, sort) => {
-		let result = await videoInfoColl.aggregate([
-			{
-		        $match: match
-		    },
-		    {
-				$sort: sort
-			},
-			{
-				$limit: 36
-			},
-			{
-				$project: {
-					_id: 0,
-					sId: '$_id',
-					videoTitle: 1,
-					videoImage: 1,
-					remind_tip: 1,
-				}
-			}
-		]).toArray();
-		return result
-	}
-
-	if(Id){
-		let _id = new ObjectID(Id);
-		let curNavExist = await otherColl.findOne({_id, type: "nav_type", parent_id: false, display: true}) || false;
-		// 没有
-		if(!curNavExist){
-			promise = Promise.reject();
-		}else{
-			rowData = {
-				swiper: !!isSwiperLen,
-				swiperList: isSwiperLen ? await pipeFn({display: true, openSwiper: true}, {rel_time: -1, video_rate: -1, update_time: -1}) : [],
-				mealList: await otherColl.find({type: 'advert', shape: 'app'}).toArray(),
-				tabList: []
-			};
-			// 全部子分类
-			let childrenType = await otherColl.find({parent_id: _id, display: true, type: "nav_type"}).toArray();
-			let qArr = [];
-			for(let arg of childrenType){
-				qArr.push(arg._id);
-			}
-			// 如果存在子分类，那么查找所以子分类下的数据有多少，没有false
-			let noChildVideo = childrenType.length ? await videoInfoColl.find({video_type: {$in: qArr}}).count() : false;
-			// 没有数据，那么把当前主分类的数据放入其中
-			if(!childrenType.length || !noChildVideo){
-				rowData.tabList.push({
-					sId: curNavExist._id,
-					name: curNavExist.name,
-					parent_id: Id,
-					list: await pipeFn({video_type: _id}, {rel_time: -1, video_rate: -1, update_time: -1})
-				})
-			}else{
-				for(let arg of childrenType){
-					let list = await videoInfoColl.find({video_type: arg._id}).sort({rel_time: -1, video_rate: -1, update_time: -1}).limit(12).toArray();
-					if(list.length){
-						rowData.tabList.push({
-							sId: arg._id,
-							name: arg.name,
-							parent_id: Id,
-							list: await pipeFn({video_type: arg._id}, {rel_time: -1, video_rate: -1, update_time: -1})
-						})
-					}
-				}
-			}
-		}
+	let data = await getCurNavData(config, ctx, next, true);
+	let promise;
+	if(!data){
+		promise = Promise.reject();
 	}else{
-
-		let allNav = await otherColl.find({type: 'nav_type', parent_id: false, display: true}).sort({index: 1}).toArray();
-		rowData = {
-			swiper: !!isSwiperLen,
-			swiperList: isSwiperLen ? await pipeFn({display: true, openSwiper: true}, {rel_time: -1, video_rate: -1, update_time: -1}) : [],
-			mealList: await otherColl.find({type: 'advert', shape: 'app'}).toArray(),
-			tabList: []
-		};
-		for(let arg of allNav){
-			let curNavChildren = await otherColl.find({parent_id: arg._id, display: true}).toArray();
-			let queryArr = [arg._id];
-			for(let arg of curNavChildren){
-				queryArr.push(arg._id)
-			}
-			rowData.tabList.push({
-				sId: arg._id,
-				name: arg.name,
-				parent_id: Id,
-				list: await pipeFn({video_type: {$in: queryArr}}, {rel_time: -1, video_rate: -1, update_time: -1})
-			})
-		}
+		promise = Promise.resolve(data);
 	}
-	promise = Promise.resolve(rowData);
 	await setResponse(ctx, promise)
 
 }
