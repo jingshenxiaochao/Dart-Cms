@@ -1,6 +1,6 @@
 const Koa = require('koa');
 const path = require('path');
-const staticCache = require('koa-static-cache')
+const static = require('koa-static');
 const Router = require('koa-router');
 const body = require('koa-body');
 const bodyParser = require('koa-bodyparser');
@@ -55,15 +55,10 @@ app.use(views(
 	{ map: {html: 'ejs' }}
 ))
 // 静态文件
-app.use(staticCache(
+app.use(static(
   	path.join( __dirname,  './static'),
   	{
-  		maxage: 2592000000,
-  		buffer: true,
-  		gzip: true,
-  		dynamic: true,
-  		preload: false,
-  		usePrecompiledGzip: true
+  		maxage: 2592000000
   	}
 ))
 // 矫正静态化以后，没有找到的文件，路由回正，走查询数据库
@@ -101,16 +96,11 @@ app.use(appRouter.routes());
 // url矫正
 app.use(routerCorrect())
 // 静态文件 - 处理矫正后的文件访问路径
-app.use(staticCache(
-  	path.join( __dirname,  './static'),
-  	{
-  		maxage: 2592000000,
-  		buffer: true,
-  		gzip: true,
-  		dynamic: true,
-  		preload: false,
-  		usePrecompiledGzip: true
-  	}
+app.use(static(
+    path.join( __dirname,  './static'),
+    {
+      maxage: 2592000000
+    }
 ))
 // 静态文件没有找到
 app.use(async (ctx, next) => {
@@ -125,16 +115,11 @@ app.use(async (ctx, next) => {
 	return next()
 })
 // 接404页面
-app.use(staticCache(
-  	path.join( __dirname,  './static'),
-  	{
-  		maxage: 2592000000,
-  		buffer: true,
-  		gzip: true,
-  		dynamic: true,
-  		preload: false,
-  		usePrecompiledGzip: true
-  	}
+app.use(static(
+    path.join( __dirname,  './static'),
+    {
+      maxage: 2592000000
+    }
 ))
 
 app.listen(9999, () => {
