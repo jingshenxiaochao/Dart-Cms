@@ -5,7 +5,7 @@ const fse = require('fs-extra');
 
 const getDB = require('../utils/baseConnect');
 const { setResponse, makeArrObjectID, mixinsScriptConfig, encryption, createTokenID, getBjDate, dirCatImgs, placeUploadImg } = require('../utils/tools');
-const { getAllMainData, getVideoDetill, getSearchData, getTypesData, createNavType, getCurNavData } = require('./public');
+const { getAllMainData, getVideoDetill, getSearchData, getTypesData, createNavType, getCurNavData, getCurArtInfo } = require('./public');
 
 // app入口数据
 let getTypeList = async (ctx, next) => {
@@ -27,12 +27,13 @@ let getTypeList = async (ctx, next) => {
 let getCurNavItemList = async (ctx, next) => {
 
 	ctx.set('Content-Type', 'application/json');
-	let videoInfoColl = getDB().collection('video_info');
-	let otherColl = getDB().collection('other');
 	let confColl = getDB().collection('config');
 	let config = await confColl.findOne({});
 
-	let data = await getCurNavData(config, ctx, next, true);
+	let nid = ctx.params.nid;
+	let isHome = (typeof nid === 'string' && nid.length === 24) ? false : true;
+
+	let data = await getCurNavData(config, ctx, next, true, isHome);
 	let promise;
 	if(!data){
 		promise = Promise.reject();
@@ -49,7 +50,7 @@ let getDetillData = async (ctx, next) => {
 	let confColl = getDB().collection('config');
 	let config = await confColl.findOne({});
 
-	let data = await getVideoDetill(config, ctx);
+	let data = await getVideoDetill(config, ctx, next, true);
 	// 如果false => 404
 	if(!data){
 		return next();
@@ -77,7 +78,7 @@ let getTypesDatas = async (ctx, next) => {
 	let confColl = getDB().collection('config');
 	let config = await confColl.findOne({});
 
-	let promise = getTypesData(config, ctx);
+	let promise = getTypesData(config, ctx, true);
 
 	await setResponse(ctx, promise)
 
@@ -89,12 +90,94 @@ let appAuthUpgrade = async (ctx, next) => {
 	let confColl = getDB().collection('config');
 	let config = await confColl.findOne({});
 
-	let isUpgrade = config.appUpgrade
+	let appKey = String(ctx.query.appKey);
+	let { appUpgrade, appUniqueKey } = config;
+
+	let isUpgrade = config.appUpgrade;
 	let result = {
-		upgrade: isUpgrade,
+		upgrade: isUpgrade && appKey !== appUniqueKey ? true : false,
+		download: config.downloadLink,
 		dialog: isUpgrade ? config.upgradeInfo : config.appInitNoticeCon
 	}
 	let promise = Promise.resolve(result);
+	await setResponse(ctx, promise)
+
+}
+// app首屏公告
+let appInitTipsInfo = async (ctx, next) => {
+
+	ctx.set('Content-Type', 'application/json');
+	let confColl = getDB().collection('config');
+	let config = await confColl.findOne({});
+
+	let result = {
+		switch: config.openAppMainNotice,
+		notice: config.appInitNoticeCon
+	}
+	let promise = Promise.resolve(result);
+	await setResponse(ctx, promise)
+}
+// app文章列表
+let getAllArtItemList = async (ctx, next) => {
+
+	ctx.set('Content-Type', 'application/json');
+	let confColl = getDB().collection('config');
+	let artInfoColl = getDB().collection('article_info');
+	let videoInfoColl = getDB().collection('video_info');
+	let otherColl = getDB().collection('other');
+	let config = await confColl.findOne({});
+
+	let { page=1 } = ctx.query;
+
+	page = Number(page);
+	page = !page || page < 1 || page === Infinity ? 1 : page;
+	let limit = 10;
+
+	let promise = new Promise(async (resolve, reject) => {
+
+		let allArtNav = await otherColl.find({display: true, "type" : 'nav_type', nav_type: 'article'}).toArray();
+		// 是否有文章分类
+		if(allArtNav.length){
+			let queryIds = [];
+			for(let arg of allArtNav){
+				queryIds.push(arg._id);
+			}
+			let artResult = await artInfoColl.find({article_type: {$in: queryIds}, display: true}).skip((page - 1) * limit).limit(limit).toArray();
+			let total = await artInfoColl.find({article_type: {$in: queryIds}, display: true}).count();
+			return resolve({
+				list: artResult,
+				total: total,
+				page: page
+			})
+		}else{
+			return resolve({
+				list: [],
+				total: 0,
+				page: page
+			})
+		}
+
+	})
+
+	await setResponse(ctx, promise)
+
+}
+// 文章详情
+let getArtDetill = async (ctx, next) => {
+
+	ctx.set('Content-Type', 'application/json');
+	let confColl = getDB().collection('config');
+
+	let config = await confColl.findOne({});
+	let curTempPath = config.curTempPath;
+
+	let data = await getCurArtInfo(config, ctx, next, true);
+	// 如果false => 404
+	if(!data){
+		return next();
+	}
+
+	let promise = Promise.resolve(data);
 	await setResponse(ctx, promise)
 
 }
@@ -105,5 +188,8 @@ module.exports = {
 	getSearchDatas,
 	getTypesDatas,
 	appAuthUpgrade,
+	getArtDetill,
 	getCurNavItemList,
+	getAllArtItemList,
+	appInitTipsInfo,
 }

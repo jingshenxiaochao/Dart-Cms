@@ -102,6 +102,8 @@ client.then(async (db) => {
             "curTempPath" : "default",
             "openAppMainNotice" : true,
             "appUpgrade" : false,
+            "appUniqueKey" : "d07d4da9-d535-49c9-8253-8e9a1fcec99a",
+            "downloadLink" : "",
             "upgradeInfo" : "",
             "appInitNoticeCon" : ""
         })

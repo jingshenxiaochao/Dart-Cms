@@ -27,16 +27,19 @@ let createNavType = (nav, navId) => {
 	return {arr, main_id}
 }
 // 视频详情页
-let getVideoDetill = async (config, ctx, next, filter=false) => {
+let getVideoDetill = async (config, ctx, next, isApp = false) => {
 
 	let videoInfoColl = getDB().collection('video_info');
 	let videoListColl = getDB().collection('video_list');
 	let artInfoColl = getDB().collection('article_info');
 	let otherColl = getDB().collection('other');
 
+	// 广告类型 app || web
+	let mealType = !isApp ? 'web' : 'app';
+
 	let vid = ctx.params.vid;
 	// id长度不符合规范
-	if(vid.length !== 24){
+	if(vid && vid.length !== 24 || !vid){
 		return false;
 	}
 	vid = new ObjectID(vid);
@@ -50,7 +53,7 @@ let getVideoDetill = async (config, ctx, next, filter=false) => {
 	let allNav = await otherColl.find({type: 'nav_type', parent_id: false, display: true}).sort({index: 1}).toArray();
 	// 源列表
 	let sourceQuery = {vid};
-	if(filter){
+	if(isApp){
 		sourceQuery['type'] = 'player';
 	}
 	let sourceList = await videoListColl.find(sourceQuery).sort({index: 1}).toArray();
@@ -133,7 +136,7 @@ let getVideoDetill = async (config, ctx, next, filter=false) => {
 			description: curVideoInfo.introduce,
 			hostName: ctx.protocols + '://' + ctx.host,
 		},
-		mealList: await otherColl.find({type: 'advert', shape: 'web'}).toArray(),
+		mealList: await otherColl.find({type: 'advert', shape: mealType}).toArray(),
 		footer: config.footerInfo.replace(/\n/, '<br />'),
 		videoInfo: curVideoInfo,
 		source: sourceList,
@@ -150,13 +153,22 @@ let getVideoDetill = async (config, ctx, next, filter=false) => {
 	}
 	return data
 }
+// 给数组的每一项设置key对应的值
+let setItemKey = function(arr, key, val){
+	for(let arg of arr){
+		arg[key] = val;
+	}
+}
 // 分类数据
-let getTypesData = async (config, ctx) => {
+let getTypesData = async (config, ctx, isApp = false) => {
 
 	let videoInfoColl = getDB().collection('video_info');
 	let otherColl = getDB().collection('other');
 
 	let { pid=false, cid=false, sub_region=false, rel_time=false, language=false, page=1, sort='_id' } = ctx.query;
+
+	// 广告类型 app || web
+	let mealType = !isApp ? 'web' : 'app';
 
 	// init default param
 	// page = /^[1-9]{1}[0-9]*$/.test(page) ? Number(page) : 1;
@@ -187,7 +199,7 @@ let getTypesData = async (config, ctx) => {
 	}
 	// 导航
 	if(pid){
-		let existCurNav = await otherColl.findOne({_id: pid, display: true, type: 'nav_type'});
+		let existCurNav = await otherColl.findOne({_id: pid, display: true, type: 'nav_type', nav_type: 'video'});
 		if(existCurNav){
 			let filterId = function(arr2){
 				let arr = [];
@@ -285,7 +297,12 @@ let getTypesData = async (config, ctx) => {
 		// 修正参数，总数大于最后一页，page=last
 		let maxPage = Math.ceil(total / 36) || 1;
 		if(page > maxPage){
-			newPage = maxPage;
+			// newPage = maxPage;
+			return {
+				page: newPage,
+				total: total,
+				list: []
+			}
 		}
 		return {
 			page: newPage,
@@ -301,7 +318,6 @@ let getTypesData = async (config, ctx) => {
 			for(let arg of arr){
 				if(key && arg[key].toString() === val.toString()){
 					arg.active = true;
-					break;
 				}
 			}
 			return arr
@@ -319,7 +335,7 @@ let getTypesData = async (config, ctx) => {
 			// 父分类 存在
 			if(existPid){
 				let inArr = [existPid._id]
-				let curChildrenNavs = await otherColl.find({parent_id: existPid._id, display: true, type: 'nav_type'}).toArray();
+				let curChildrenNavs = await otherColl.find({parent_id: existPid._id, display: true, type: 'nav_type', nav_type: 'video'}).toArray();
 				for(let arg of curChildrenNavs){
 					inArr.push(arg._id)
 				}
@@ -345,9 +361,13 @@ let getTypesData = async (config, ctx) => {
 		}
 
 		// 全部导航
-		let nav_list = await otherColl.find({display: true, parent_id: false, type: 'nav_type'}).toArray();
+		let nav_list = await otherColl.find({display: true, parent_id: false, type: 'nav_type', nav_type: 'video'}).toArray();
+		setItemKey(nav_list, 'active', false);
 		// 当前导航下的子分类
-		let type_list = existPid ? await otherColl.find({display: true, parent_id: existPid._id, type: 'nav_type'}).toArray() : await otherColl.find({display: true, parent_id: {$type: 7}, type: 'nav_type'}).toArray();
+		let type_list = existPid
+			? await otherColl.find({display: true, parent_id: existPid._id, type: 'nav_type', nav_type: 'video'}).toArray()
+			: await otherColl.find({display: true, parent_id: {$type: 7}, type: 'nav_type', nav_type: 'video'}).toArray();
+		setItemKey(type_list, 'active', false);
 		// 上映时间
 		let rel_time_list = await videoInfoColl.aggregate([
 			{
@@ -361,6 +381,7 @@ let getTypesData = async (config, ctx) => {
 		    }
 		]).toArray();
 		rel_time_list = rel_time_list.length ? createNewObj(rel_time_list[0].list) : [];
+		setItemKey(rel_time_list, 'active', false);
 		// 发行地区
 		let sub_region_list = await videoInfoColl.aggregate([
 			{
@@ -374,6 +395,7 @@ let getTypesData = async (config, ctx) => {
 		    }
 		]).toArray();
 		sub_region_list = sub_region_list.length ? createNewObj(sub_region_list[0].list) : [];
+		setItemKey(sub_region_list, 'active', false);
 		// 语言
 		let language_list = await videoInfoColl.aggregate([
 			{
@@ -387,27 +409,28 @@ let getTypesData = async (config, ctx) => {
 		    }
 		]).toArray();
 		language_list = language_list.length ? createNewObj(language_list[0].list) : [];
+		setItemKey(language_list, 'active', false);
 		// 结果
 		let returnResult = {
 			nav: {
 				label: '导航',
-				list: existPid ? [{name: '全部', _id: false}].concat(activeListResult(nav_list, '_id', existPid._id)) : [{name: '全部', _id: false, active: true}].concat(nav_list)
+				list: existPid ? [{name: '全部', _id: '', active: false}].concat(activeListResult(nav_list, '_id', existPid._id)) : [{name: '全部', _id: '', active: true}].concat(nav_list)
 			},
 			type: {
 				label: '分类',
-				list: existCid ? [{name: '全部', _id: false}].concat(activeListResult(type_list, '_id', existCid._id)) : [{name: '全部', _id: false, active: true}].concat(type_list)
+				list: existCid ? [{name: '全部', _id: '', active: false}].concat(activeListResult(type_list, '_id', existCid._id)) : [{name: '全部', _id: '', active: true}].concat(type_list)
 			},
 			region: {
 				label: '地区',
-				list: sub_region ? [{name: '全部', _id: false}].concat(activeListResult(sub_region_list, '_id', sub_region)) : [{name: '全部', _id: false, active: true}].concat(sub_region_list)
+				list: sub_region ? [{name: '全部', _id: '', active: false}].concat(activeListResult(sub_region_list, '_id', sub_region)) : [{name: '全部', _id: '', active: true}].concat(sub_region_list)
 			},
 			years: {
 				label: '年代',
-				list: rel_time ? [{name: '全部', _id: false}].concat(activeListResult(rel_time_list, '_id', rel_time)) : [{name: '全部', _id: false, active: true}].concat(rel_time_list)
+				list: rel_time ? [{name: '全部', _id: '', active: false}].concat(activeListResult(rel_time_list, '_id', rel_time)) : [{name: '全部', _id: '', active: true}].concat(rel_time_list)
 			},
 			language: {
 				label: '语言',
-				list: language ? [{name: '全部', _id: false}].concat(activeListResult(language_list, '_id', language)) : [{name: '全部', _id: false, active: true}].concat(language_list)
+				list: language ? [{name: '全部', _id: '', active: false}].concat(activeListResult(language_list, '_id', language)) : [{name: '全部', _id: '', active: true}].concat(language_list)
 			}
 		}
 		return returnResult
@@ -425,7 +448,7 @@ let getTypesData = async (config, ctx) => {
 			description: config.description,
 			hostName: ctx.protocols + '://' + ctx.host,
 		},
-		mealList: await otherColl.find({type: 'advert', shape: 'web'}).toArray(),
+		mealList: await otherColl.find({type: 'advert', shape: mealType}).toArray(),
 		footer: config.footerInfo.replace(/\n/, '<br />'),
 		nav: navData,
 		isLogin: JSON.stringify(ctx.session1) !== '{}' ? true : false,
@@ -535,85 +558,160 @@ let getSearchData = async (config, ctx) => {
 	return data
 }
 // 单个分类数据
-let getCurNavData = async (config, ctx, next, isQuery = false) => {
+let getCurNavData = async (config, ctx, next, isApp = false, isHome = false) => {
 
 	let videoInfoColl = getDB().collection('video_info');
 	let otherColl = getDB().collection('other');
+	let data = {};
+
+	// 广告类型 app || web
+	let mealType = !isApp ? 'web' : 'app';
 
 	let isSwiperLen = 0;
 	if(config.openSwiper){
 		isSwiperLen = await videoInfoColl.find({openSwiper: true, display: true}).count();
 	}
 
-	let nid = !isQuery ? ctx.params.nid : ctx.query.nid;
-	let newNid = new ObjectID(nid);
+	// 非首页
+	if(!isHome){
 
-	let curNavExist = (nid && nid.length === 24) ? await otherColl.findOne({_id: newNid, type: "nav_type", nav_type: 'video', parent_id: false, display: true}) : false;
-	if(!curNavExist){
-		return false
-	}
+		let nid = ctx.params.nid;
+		if(!nid || nid && typeof nid === 'string' && nid.length !== 24){
+			return false
+		}
+		let newNid = new ObjectID(nid);
 
-	let allNav = await otherColl.find({type: 'nav_type', parent_id: false, display: true}).sort({index: 1}).toArray();
-	let createNavResult = createNavType(allNav, nid);
-	let navData = createNavResult.arr;
+		let curNavExist = (nid && nid.length === 24) ? await otherColl.findOne({_id: newNid, type: "nav_type", nav_type: 'video', parent_id: false, display: true}) : false;
+		if(!curNavExist){
+			return false
+		}
 
-	let tabList = [];
-	let childrenType = await otherColl.find({parent_id: newNid, display: true, type: "nav_type", nav_type: 'video'}).toArray();
-	let qArr = [];
-	for(let arg of childrenType){
-		qArr.push(arg._id);
-	}
-	let noChildVideo = childrenType.length ? await videoInfoColl.find({video_type: {$in: qArr}}).count() : false;
-	if(!childrenType.length || !noChildVideo){
+		let allNav = await otherColl.find({type: 'nav_type', parent_id: false, display: true}).sort({index: 1}).toArray();
+		let createNavResult = createNavType(allNav, nid);
+		let navData = createNavResult.arr;
 
-		// 置顶数据 + 普通数据
-		let topCurNavList = await videoInfoColl.find({popular: true, display: true, video_type: newNid}).sort({rel_time: -1, video_rate: -1, update_time: -1}).limit(36).toArray();
-		let spacing = 36 - topCurNavList.length;
-		let curNavList = (spacing !== 0) ? await videoInfoColl.find({popular: false, display: true, video_type: newNid}).sort({rel_time: -1, video_rate: -1, update_time: -1}).limit(spacing).toArray() : [];
-
-		tabList.push({
-			_id: curNavExist._id,
-			name: curNavExist.name,
-			parent_id: nid,
-			seo: curNavExist.seo,
-			list: topCurNavList.concat(curNavList)
-		})
-	}else{
+		let tabList = [];
+		let childrenType = await otherColl.find({parent_id: newNid, display: true, type: "nav_type", nav_type: 'video'}).toArray();
+		let qArr = [];
 		for(let arg of childrenType){
-			// let list = await videoInfoColl.find({video_type: arg._id}).sort({rel_time: -1, video_rate: -1, update_time: -1}).limit(12).toArray();
+			qArr.push(arg._id);
+		}
+		let noChildVideo = childrenType.length ? await videoInfoColl.find({video_type: {$in: qArr}}).count() : false;
+		if(!childrenType.length || !noChildVideo){
 
-			let topCurNavList = await videoInfoColl.find({popular: true, display: true, video_type: arg._id}).sort({rel_time: -1, video_rate: -1, update_time: -1}).limit(12).toArray();
+			// 置顶数据 + 普通数据
+			let topCurNavList = await videoInfoColl.find({popular: true, display: true, video_type: newNid}).sort({rel_time: -1, video_rate: -1, update_time: -1}).limit(36).toArray();
+			let spacing = 36 - topCurNavList.length;
+			let curNavList = (spacing !== 0) ? await videoInfoColl.find({popular: false, display: true, video_type: newNid}).sort({rel_time: -1, video_rate: -1, update_time: -1}).limit(spacing).toArray() : [];
+
+			tabList.push({
+				_id: curNavExist._id,
+				name: curNavExist.name,
+				parent_id: nid,
+				seo: curNavExist.seo,
+				list: topCurNavList.concat(curNavList)
+			})
+		}else{
+			for(let arg of childrenType){
+				// let list = await videoInfoColl.find({video_type: arg._id}).sort({rel_time: -1, video_rate: -1, update_time: -1}).limit(12).toArray();
+
+				let topCurNavList = await videoInfoColl.find({popular: true, display: true, video_type: arg._id}).sort({rel_time: -1, video_rate: -1, update_time: -1}).limit(12).toArray();
+				let spacing = 12 - topCurNavList.length;
+				let curNavList = (spacing !== 0) ? await videoInfoColl.find({popular: false, display: true, video_type: arg._id}).sort({rel_time: -1, video_rate: -1, update_time: -1}).limit(spacing).toArray() : [];
+				let list = topCurNavList.concat(curNavList);
+
+				if(list.length){
+					tabList.push({
+						_id: arg._id,
+						name: arg.name,
+						parent_id: nid,
+						seo: arg.seo,
+						list: list
+					})
+				}
+			}
+		}
+
+		let allChild = qArr.concat(newNid);
+		data = {
+			meta: {
+				title: `${curNavExist.name} - ${config.websiteName}`,
+				keywords: `${curNavExist.seo.keywords}`,
+				description: `${curNavExist.seo.description}`,
+				hostName: ctx.protocols + '://' + ctx.host,
+			},
+			mealList: await otherColl.find({type: 'advert', shape: mealType}).toArray(),
+			isLogin: JSON.stringify(ctx.session1) !== '{}' ? true : false,
+			isOpenSwiper: !!isSwiperLen,
+			swiperList: (!!isSwiperLen) ? await videoInfoColl.find({display: true, openSwiper: true, video_type: {$in: allChild}}).sort({rel_time: -1, video_rate: -1, update_time: -1}).toArray() : [],
+			footer: config.footerInfo.replace(/\n/, '<br />'),
+			nav: navData,
+			tabList: tabList,
+			publicCode: config.publicCode,
+		}
+
+	}else{     // 首页
+
+		let tabList = [];
+
+		// 只查找nav_type: video,只查找视频导航
+		let allNav = await otherColl.find({type: 'nav_type', parent_id: false, display: true}).sort({index: 1}).toArray();
+		let createNavResult = createNavType(allNav, '0');
+		let navData = createNavResult.arr;
+
+		for(let arg of allNav){
+			let curNavChildren = await otherColl.find({parent_id: arg._id, display: true}).toArray();
+			let queryArr = [arg._id];
+			for(let arg of curNavChildren){
+				queryArr.push(arg._id)
+			}
+			// 置顶数据 + 普通数据
+			let topCurNavList = await videoInfoColl.find({popular: true, display: true, video_type: {$in: queryArr}}).sort({rel_time: -1, video_rate: -1, update_time: -1}).limit(12).toArray();
 			let spacing = 12 - topCurNavList.length;
-			let curNavList = (spacing !== 0) ? await videoInfoColl.find({popular: false, display: true, video_type: arg._id}).sort({rel_time: -1, video_rate: -1, update_time: -1}).limit(spacing).toArray() : [];
-			let list = topCurNavList.concat(curNavList);
+			let curNavList = (spacing !== 0) ? await videoInfoColl.find({popular: false, display: true, video_type: {$in: queryArr}}).sort({rel_time: -1, video_rate: -1, update_time: -1}).limit(spacing).toArray() : [];
 
-			if(list.length){
+			// 是否app
+			if(isApp){
 				tabList.push({
 					_id: arg._id,
 					name: arg.name,
-					parent_id: nid,
+					parent_id: '0',
 					seo: arg.seo,
-					list: list
+					list: topCurNavList.concat(curNavList)
+				})
+			}else{    // 网站
+				tabList.push({
+					left: {
+						title: arg.name,
+						_id: arg._id,
+						list: topCurNavList.concat(curNavList)
+					},
+					right: {
+						title: '最新' + arg.name,
+						list: await videoInfoColl.find({display: true, video_type: {$in: queryArr}}).sort({update_time: -1, rel_time: -1}).limit(12).toArray()
+					}
 				})
 			}
 		}
-	}
-	let allChild = qArr.concat(newNid);
-	let data = {
-		meta: {
-			title: `${curNavExist.name} - ${config.websiteName}`,
-			keywords: `${curNavExist.seo.keywords}`,
-			description: `${curNavExist.seo.description}`,
-			hostName: ctx.protocols + '://' + ctx.host,
-		},
-		mealList: await otherColl.find({type: 'advert', shape: 'web'}).toArray(),
-		isLogin: JSON.stringify(ctx.session1) !== '{}' ? true : false,
-		isOpenSwiper: !!isSwiperLen,
-		swiperList: (!!isSwiperLen) ? await videoInfoColl.find({display: true, openSwiper: true, video_type: {$in: allChild}}).sort({rel_time: -1, video_rate: -1, update_time: -1}).toArray() : [],
-		footer: config.footerInfo.replace(/\n/, '<br />'),
-		nav: navData,
-		tabList: tabList,
-		publicCode: config.publicCode,
+
+		data = {
+			meta: {
+				title: config.websiteName,
+				keywords: config.keywords,
+				description: config.description,
+				hostName: ctx.protocols + '://' + ctx.host,
+			},
+			mealList: await otherColl.find({type: 'advert', shape: mealType}).toArray(),
+			isLogin: JSON.stringify(ctx.session1) !== '{}' ? true : false,
+			isOpenSwiper: !!isSwiperLen,
+			swiperList: (!!isSwiperLen) ? await videoInfoColl.find({display: true, openSwiper: true}).sort({rel_time: -1, video_rate: -1, update_time: -1}).toArray() : [],
+			footer: config.footerInfo.replace(/\n/, '<br />'),
+			nav: navData,
+			//
+			tabList: tabList,
+			links: await otherColl.find({type: 'link'}).toArray(),
+			publicCode: config.publicCode,
+		}
 	}
 	return data
 }
@@ -644,6 +742,10 @@ let getCurArtData = async (config, ctx, next) => {
 	}
 
 	let aid = ctx.params.aid;
+	// aid不符合要求或者没有
+	if(!aid || aid && aid.length !== 24){
+		return false
+	}
 	let newNid = new ObjectID(aid);
 
 	let curNavExist = (aid && aid.length === 24) ? await otherColl.findOne({_id: newNid, type: "nav_type", nav_type: 'article', display: true}) : false;
@@ -758,17 +860,24 @@ let getCurArtData = async (config, ctx, next) => {
 	return data
 }
 // 获取单个文章详细信息
-let getCurArtInfo = async (config, ctx, next) => {
+let getCurArtInfo = async (config, ctx, next, isApp = false) => {
 
 	let artInfoColl = getDB().collection('article_info');
 	let artListColl = getDB().collection('article_list');
 	let videoInfoColl = getDB().collection('video_info');
 	let otherColl = getDB().collection('other');
 
+	// 广告类型
+	let mealType = !isApp ? 'web' : 'app';
+
 	let aid = ctx.params.aid;
+	// aid不符合要求或者没有
+	if(!aid || aid && aid.length !== 24){
+		return false
+	}
 	let newAid = new ObjectID(aid)
 
-	let curArtExist = (aid && aid.length === 24) ? await artInfoColl.findOne({_id: newAid, display: true}) : false;
+	let curArtExist = await artInfoColl.findOne({_id: newAid, display: true});
 	if(!curArtExist){
 		return false
 	}
@@ -813,7 +922,7 @@ let getCurArtInfo = async (config, ctx, next) => {
 			description: curArtExist.introduce,
 			hostName: ctx.protocols + '://' + ctx.host,
 		},
-		mealList: await otherColl.find({type: 'advert', shape: 'web'}).toArray(),
+		mealList: await otherColl.find({type: 'advert', shape: mealType}).toArray(),
 		isLogin: JSON.stringify(ctx.session1) !== '{}' ? true : false,
 		footer: config.footerInfo.replace(/\n/, '<br />'),
 		childNav: setArtChildNav(allCurTypeNav, curArtType._id.toString()),
