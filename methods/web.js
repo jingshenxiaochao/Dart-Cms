@@ -10,67 +10,6 @@ const { createNavType, getVideoDetill, getTypesData, getSearchData, getCurNavDat
 // 首页
 let webIndex = async (ctx, next) => {
 
-	// let confColl = getDB().collection('config');
-	// let videoInfoColl = getDB().collection('video_info');
-	// let otherColl = getDB().collection('other');
-
-	// let config = await confColl.findOne({});
-	// let curTempPath = config.curTempPath;
-
-
-	// let isSwiperLen = 0;
-	// if(config.openSwiper){
-	// 	isSwiperLen = await videoInfoColl.find({openSwiper: true, display: true}).count();
-	// }
-	// let tabList = [];
-
-	// let allNav = await otherColl.find({type: 'nav_type', parent_id: false, display: true}).sort({index: 1}).toArray();
-	// let createNavResult = createNavType(allNav, '0');
-	// let navData = createNavResult.arr;
-
-	// for(let arg of allNav){
-	// 	let curNavChildren = await otherColl.find({parent_id: arg._id, display: true}).toArray();
-	// 	let queryArr = [arg._id];
-	// 	for(let arg of curNavChildren){
-	// 		queryArr.push(arg._id)
-	// 	}
-	// 	// 置顶数据 + 普通数据
-	// 	let topCurNavList = await videoInfoColl.find({popular: true, display: true, video_type: {$in: queryArr}}).sort({rel_time: -1, video_rate: -1, update_time: -1}).limit(12).toArray();
-	// 	let spacing = 12 - topCurNavList.length;
-	// 	let curNavList = (spacing !== 0) ? await videoInfoColl.find({popular: false, display: true, video_type: {$in: queryArr}}).sort({rel_time: -1, video_rate: -1, update_time: -1}).limit(spacing).toArray() : [];
-
-	// 	tabList.push({
-	// 		left: {
-	// 			title: arg.name,
-	// 			_id: arg._id,
-	// 			list: topCurNavList.concat(curNavList)
-	// 		},
-	// 		right: {
-	// 			title: '最新' + arg.name,
-	// 			list: await videoInfoColl.find({display: true, video_type: {$in: queryArr}}).sort({update_time: -1, rel_time: -1}).limit(12).toArray()
-	// 		}
-	// 	})
-	// }
-
-	// let data = {
-	// 	meta: {
-	// 		title: config.websiteName,
-	// 		keywords: config.keywords,
-	// 		description: config.description,
-	// 		hostName: ctx.protocols + '://' + ctx.host,
-	// 	},
-	// 	mealList: await otherColl.find({type: 'advert', shape: 'web'}).toArray(),
-	// 	isLogin: JSON.stringify(ctx.session1) !== '{}' ? true : false,
-	// 	isOpenSwiper: !!isSwiperLen,
-	// 	swiperList: (!!isSwiperLen) ? await videoInfoColl.find({display: true, openSwiper: true}).sort({rel_time: -1, video_rate: -1, update_time: -1}).toArray() : [],
-	// 	footer: config.footerInfo.replace(/\n/, '<br />'),
-	// 	nav: navData,
-	// 	//
-	// 	tabList: tabList,
-	// 	links: await otherColl.find({type: 'link'}).toArray(),
-	// 	publicCode: config.publicCode,
-	// }
-
 	let confColl = getDB().collection('config');
 
 	let config = await confColl.findOne({});

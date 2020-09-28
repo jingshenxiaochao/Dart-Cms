@@ -212,10 +212,10 @@
 									<li><a href="<%= meta.hostName %>/article-type/<%= curType._id %>.html?page=<%= articleResult.page + 1 %>"><%= articleResult.page + 1 %></a></li>
 									<% } %>
 									<% if(articleResult.page + 2 < (Math.ceil(articleResult.total / 10) + 1)){ %>
-									<li><a href="<%= meta.hostName %>/article-type/<%= curType._id %>.html?page=<%= articleResult.page - 1 %>"><%= articleResult.page + 2 %></a></li>
+									<li><a href="<%= meta.hostName %>/article-type/<%= curType._id %>.html?page=<%= articleResult.page + 2 %>"><%= articleResult.page + 2 %></a></li>
 									<% } %>
 									<% if(articleResult.page + 1 < (Math.ceil(articleResult.total / 10) + 1)){ %>
-									<li class="previous"><a href="<%= meta.hostName %>/article-type/<%= curType._id %>.html?page=<%= articleResult.page - 1 %>">»</a></li>
+									<li class="previous"><a href="<%= meta.hostName %>/article-type/<%= curType._id %>.html?page=<%= articleResult.page + 1 %>">»</a></li>
 									<% } %>
 								</ul>
 							</div>

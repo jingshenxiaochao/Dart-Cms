@@ -142,7 +142,7 @@ let getAllArtItemList = async (ctx, next) => {
 			for(let arg of allArtNav){
 				queryIds.push(arg._id);
 			}
-			let artResult = await artInfoColl.find({article_type: {$in: queryIds}, display: true}).skip((page - 1) * limit).limit(limit).toArray();
+			let artResult = await artInfoColl.find({article_type: {$in: queryIds}, display: true}).sort({_id: -1}).skip((page - 1) * limit).limit(limit).toArray();
 			let total = await artInfoColl.find({article_type: {$in: queryIds}, display: true}).count();
 			return resolve({
 				list: artResult,
