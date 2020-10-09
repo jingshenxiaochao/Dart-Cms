@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8" />
-	<title><%= meta.title %></title>
-	<meta name="keywords" content="<%= meta.keywords %> - <%= meta.title %>" />
-	<meta name="description" content="<%= meta.description %>" />
+	<title><%- meta.title %></title>
+	<meta name="keywords" content="<%- meta.keywords %> - <%- meta.title %>" />
+	<meta name="description" content="<%- meta.description %>" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10" />
 	<meta name="renderer" content="webkit|ie-comp|ie-stand">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/zui.min.css" />
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/font-awesome.min.css" />
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/display.min.css" />
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/swiper.min.css" />
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/tools.css" />
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/detill.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/zui.min.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/font-awesome.min.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/display.min.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/swiper.min.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/tools.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/detill.css" />
 	<style>
 		@media (max-width:992px){.art-img-2x{width: 90px;}.art-tit-2x{width: calc(100% - 90px);}.art-intro{margin-top: 10px;}}
 		@media (min-width:992px){.art-img-2x{width: 180px;}.art-tit-2x{width: calc(100% - 180px);}.art-intro{margin-top: 20px;}}
@@ -27,15 +27,15 @@
 			<div class="pt10 pb10">
 				<div class="pub-flex">
 					<div class="logo pub-flex">
-						<a class="block" href="<%= meta.hostName %>">
-							<img class="block" src="<%= meta.hostName %>/upload/logo/logo.png" alt="网站logo图片" />
+						<a class="block" href="<%- meta.hostName %>">
+							<img class="block" src="<%- meta.hostName %>/upload/logo/logo.png" alt="网站logo图片" />
 						</a>
 					</div>
 					<div class="nav-type pl20">
 						<!-- pc导航栏 -->
 						<div class="pc-nav">
 							<% nav.forEach((item, index) => { %>
-							<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%= meta.hostName %><%= item.link %>"><%= item.name %></a>
+							<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%- meta.hostName %><%- item.link %>"><%- item.name %></a>
 							<% }) %>
 						</div>
 						<!--  -->
@@ -56,7 +56,7 @@
 						<!--  -->
 					</div>
 					<div class="operate pub-flex ml10">
-						<div onclick="window.location.href='<%= meta.hostName %>/type.html'" class="btn-ico pr10 pl10 pub-flex pointer">
+						<div onclick="window.location.href='<%- meta.hostName %>/type.html'" class="btn-ico pr10 pl10 pub-flex pointer">
 							<i class="fa fa-list"></i>
 						</div>
 						<% if(!isLogin) { %>
@@ -70,7 +70,7 @@
 							</div>
 							<div class="dropdown-menu pull-right">
 								<div style="width: 230px;" class="pub-flex link text-center">
-									<div class="pub-flex pub-flex1 pub-jc-center pointer" onclick="window.location.href='<%= meta.hostName %>/user.html'">
+									<div class="pub-flex pub-flex1 pub-jc-center pointer" onclick="window.location.href='<%- meta.hostName %>/user.html'">
 										<div class="btn-ico">
 											<i class="fa fa-user"></i>
 										</div>
@@ -115,7 +115,7 @@
 			<!-- mobile导航栏 -->
 			<div class="mobile-nav ov-x-a ov-y-h" style="white-space: nowrap">
 				<% nav.forEach((item, index) => {  %>
-				<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%= meta.hostName %><%= item.link %>"><%= item.name %></a>
+				<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%- meta.hostName %><%- item.link %>"><%- item.name %></a>
 				<% }) %>
 			</div>
 			<!--  -->
@@ -128,8 +128,8 @@
 			<div>
 				<% mealList.forEach((item) => {  %>
 				<div>
-					<a href="<%= item.link %>">
-						<img style="max-width: 100%;" src="<%= item.path %>" alt="" />
+					<a href="<%- item.link %>">
+						<img style="max-width: 100%;" src="<%- item.path %>" alt="" />
 					</a>
 				</div>
 				<% }) %>
@@ -143,7 +143,7 @@
 			<!-- pc导航栏 -->
 			<div class="pc-nav ov-y-h ov-x-a" style="display: block!important;">
 				<% childNav.forEach((item, index) => { %>
-				<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%= meta.hostName %>/article-type/<%= item._id %>.html"><%= item.name %></a>
+				<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%- meta.hostName %>/article-type/<%- item._id %>.html"><%- item.name %></a>
 				<% }) %>
 			</div>
 		</div>
@@ -160,7 +160,7 @@
 					    <div class="swiper-wrapper">
 					    	<% swiperList.forEach((item) => {  %>
 					        <div class="swiper-slide">
-								<a class="block lazy" href="<%= meta.hostName %>/article/<%= item._id %>.html" style="background: url(<%= item.poster %>) no-repeat; background-position:50% 40%; background-size: cover; padding-top: 40%;"></a>
+								<a class="block lazy" href="<%- meta.hostName %>/article/<%- item._id %>.html" style="background: url(<%- item.poster %>) no-repeat; background-position:50% 40%; background-size: cover; padding-top: 40%;"></a>
 					        </div>
 					        <% }) %>
 					    </div>
@@ -176,17 +176,17 @@
 							<div>
 								<% articleResult.list.forEach((item) => { %>
 								<div class="row-col" style="border-bottom: 1px solid #f8f8f8;">
-									<a href="<%= meta.hostName %>/article/<%- item._id %>.html">
+									<a href="<%- meta.hostName %>/article/<%- item._id %>.html">
 										<div class="pt10 pb10">
 											<div class="clearfix pr">
 												<div class="art-tit-2x">
-													<p style="font-size: 20px;line-height: 30px;"><%= item.articleTitle %></p>
-													<p class="text-ellipsis art-intro"><%= item.introduce %></p>
+													<p style="font-size: 20px;line-height: 30px;"><%- item.articleTitle %></p>
+													<p class="text-ellipsis art-intro"><%- item.introduce %></p>
 												</div>
-												<div data-original="<%= item.articleImage %>" style="background-image: url(<%= meta.hostName %>/image/lazy.gif);" class="art-img-2x pr lazy" ></div>
+												<div data-original="<%- item.articleImage %>" style="background-image: url(<%- meta.hostName %>/image/lazy.gif);" class="art-img-2x pr lazy" ></div>
 												<div class="pa art-tips">
-													<span class="art-type-tip"><%= item.article_type %></span>
-													<span class="art-time-tip"><%= item.update_time %></span>
+													<span class="art-type-tip"><%- item.article_type %></span>
+													<span class="art-time-tip"><%- item.update_time %></span>
 												</div>
 											</div>
 										</div>
@@ -199,23 +199,23 @@
 							<div id="page-app" class="text-center">
 								<ul class="pager">
 									<% if(articleResult.page - 1 > 0){ %>
-									<li class="previous"><a href="<%= meta.hostName %>/article-type/<%= curType._id %>.html?page=<%= articleResult.page - 1 %>">«</a></li>
+									<li class="previous"><a href="<%- meta.hostName %>/article-type/<%- curType._id %>.html?page=<%- articleResult.page - 1 %>">«</a></li>
 									<% } %>
 									<% if(articleResult.page - 2 > 0){ %>
-									<li><a href="<%= meta.hostName %>/article-type/<%= curType._id %>.html?page=<%= articleResult.page - 2 %>"><%= articleResult.page - 2 %></a></li>
+									<li><a href="<%- meta.hostName %>/article-type/<%- curType._id %>.html?page=<%- articleResult.page - 2 %>"><%- articleResult.page - 2 %></a></li>
 									<% } %>
 									<% if(articleResult.page - 1 > 0){ %>
-									<li><a href="<%= meta.hostName %>/article-type/<%= curType._id %>.html?page=<%= articleResult.page - 1 %>"><%= articleResult.page - 1 %></a></li>
+									<li><a href="<%- meta.hostName %>/article-type/<%- curType._id %>.html?page=<%- articleResult.page - 1 %>"><%- articleResult.page - 1 %></a></li>
 									<% } %>
-									<li class="active"><a><%= articleResult.page %></a></li>
-									<% if(articleResult.page + 1 < (Math.ceil(articleResult.total / 10) + 1)){ %>
-									<li><a href="<%= meta.hostName %>/article-type/<%= curType._id %>.html?page=<%= articleResult.page + 1 %>"><%= articleResult.page + 1 %></a></li>
+									<li class="active"><a><%- articleResult.page %></a></li>
+									<% if(articleResult.page + 1 < (Mathceil(articleResult.total / 10) + 1)){ %>
+									<li><a href="<%- meta.hostName %>/article-type/<%- curType._id %>.html?page=<%- articleResult.page + 1 %>"><%- articleResult.page + 1 %></a></li>
 									<% } %>
-									<% if(articleResult.page + 2 < (Math.ceil(articleResult.total / 10) + 1)){ %>
-									<li><a href="<%= meta.hostName %>/article-type/<%= curType._id %>.html?page=<%= articleResult.page + 2 %>"><%= articleResult.page + 2 %></a></li>
+									<% if(articleResult.page + 2 < (Mathceil(articleResult.total / 10) + 1)){ %>
+									<li><a href="<%- meta.hostName %>/article-type/<%- curType._id %>.html?page=<%- articleResult.page + 2 %>"><%- articleResult.page + 2 %></a></li>
 									<% } %>
-									<% if(articleResult.page + 1 < (Math.ceil(articleResult.total / 10) + 1)){ %>
-									<li class="previous"><a href="<%= meta.hostName %>/article-type/<%= curType._id %>.html?page=<%= articleResult.page + 1 %>">»</a></li>
+									<% if(articleResult.page + 1 < (Mathceil(articleResult.total / 10) + 1)){ %>
+									<li class="previous"><a href="<%- meta.hostName %>/article-type/<%- curType._id %>.html?page=<%- articleResult.page + 1 %>">»</a></li>
 									<% } %>
 								</ul>
 							</div>
@@ -238,7 +238,7 @@
 					<div class="mt10">
 						<div class="pub-flex ov-x-h">
 							<div>
-								<a href="<%= meta.hostName %>/detill/<%= videoTop[0]._id %>.html" class="row-item pr lazy" data-original="<%= videoTop[0].videoImage %>" style="width: 95px;background-image: url(/image/lazy.gif);">
+								<a href="<%- meta.hostName %>/detill/<%- videoTop[0]._id %>.html" class="row-item pr lazy" data-original="<%- videoTop[0].videoImage %>" style="width: 95px;background-image: url(/image/lazy.gif);">
 									<i class="play-ico"></i>
 								</a>
 							</div>
@@ -246,10 +246,10 @@
 								<div class="pl20 pr20">
 									<div>
 										<h4 class="link text-ellipsis">
-											<a href="<%= meta.hostName %>/detill/<%= videoTop[0]._id %>.html"><%= videoTop[0].videoTitle %></a>
+											<a href="<%- meta.hostName %>/detill/<%- videoTop[0]._id %>.html"><%- videoTop[0].videoTitle %></a>
 										</h4>
-										<p class="mt10"><span style="color: #666;">导演:</span><%= videoTop[0].director %></p>
-										<p class="text-ellipsis word-wrap mt10"><span style="color: #666;">主演:</span><%= videoTop[0].performer %>……</p>
+										<p class="mt10"><span style="color: #666;">导演:</span><%- videoTop[0].director %></p>
+										<p class="text-ellipsis word-wrap mt10"><span style="color: #666;">主演:</span><%- videoTop[0].performer %>……</p>
 									</div>
 								</div>
 							</div>
@@ -260,9 +260,9 @@
 							<% videoTop.forEach((item3, index) => {  %>
 							<li>
 								<div class="pop-item pub-flex">
-									<i class="num<% if(index == 0) { %> one<% } else if(index == 1) { %> two<% } else if(index == 2) { %> there<% }%>"><%= index + 1 %></i>
-									<a href="<%= meta.hostName %>/detill/<%= item3._id %>.html" class="name pub-flex1 text-ellipsis word-wrap"><%= item3.videoTitle %></a>
-									<span class="type text-ellipsis word-wrap"><%= item3.remind_tip %></span>
+									<i class="num<% if(index == 0) { %> one<% } else if(index == 1) { %> two<% } else if(index == 2) { %> there<% }%>"><%- index + 1 %></i>
+									<a href="<%- meta.hostName %>/detill/<%- item3._id %>.html" class="name pub-flex1 text-ellipsis word-wrap"><%- item3.videoTitle %></a>
+									<span class="type text-ellipsis word-wrap"><%- item3.remind_tip %></span>
 								</div>
 							</li>
 							<% }) %>
@@ -287,9 +287,9 @@
 							<% articleTop.forEach((item3, index) => {  %>
 							<li>
 								<div class="pop-item pub-flex">
-									<i class="num<% if(index == 0) { %> one<% } else if(index == 1) { %> two<% } else if(index == 2) { %> there<% }%>"><%= index + 1 %></i>
-									<a href="<%= meta.hostName %>/article/<%= item3._id %>.html" class="name pub-flex1 text-ellipsis word-wrap"><%= item3.articleTitle %></a>
-<!-- 									<span class="type text-ellipsis word-wrap"><%= item3.remind_tip %></span> -->
+									<i class="num<% if(index == 0) { %> one<% } else if(index == 1) { %> two<% } else if(index == 2) { %> there<% }%>"><%- index + 1 %></i>
+									<a href="<%- meta.hostName %>/article/<%- item3._id %>.html" class="name pub-flex1 text-ellipsis word-wrap"><%- item3.articleTitle %></a>
+<!-- 									<span class="type text-ellipsis word-wrap"><%- item3.remind_tip %></span> -->
 								</div>
 							</li>
 							<% }) %>
@@ -381,14 +381,14 @@
 	</div>
 	<% } %>
 	<!-- 公共js -->
-	<script src="<%= meta.hostName %>/js/public/jquery.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/zui.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/jquery.cookie.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/jquery.lazyload.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/clipboard.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/swiper.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/public.js"></script>
-	<script src="<%= meta.hostName %>/js/public/baidu-push.js"></script>
+	<script src="<%- meta.hostName %>/js/public/jquery.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/zui.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/jquery.cookie.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/jquery.lazyload.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/clipboard.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/swiper.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/public.js"></script>
+	<script src="<%- meta.hostName %>/js/public/baidu-push.js"></script>
 	<!-- 统计，广告等 -->
 	<%- publicCode %>
 </body>

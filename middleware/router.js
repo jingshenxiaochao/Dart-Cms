@@ -16,12 +16,13 @@ module.exports = (ctx, next) => {
 		let isUpload = /^\/upload\//.test(url);         // 上传文件静态目录
 		let isWeb = /^\/web\//.test(url);               // 前端交互ajax模板接口
 		let is404 = /^\/404/.test(url);                 // 404页面
+		let isRss = /^\/rss/.test(url);                 // rss订阅，sitemap
 
 		// let isArtHome = /^\/article-type\//.test(url);  // 文章列表首页
 		// let isArtDetill = /^\/article\//.test(url);     // 文章内容页
 
 		// 如果不是以上的目录，则修改路径，指向前端模板所在目录
-		if(!isApp && !isManage && !isPlayer && !isUpload && !isWeb && !is404){
+		if(!isApp && !isManage && !isPlayer && !isUpload && !isWeb && !is404 && !isRss){
 			// 直接输出的页面有 search.html index.html type.html user.html
 			if(
 				/^\/player\.html|\/detill\.html|\/video-type\.html|\/article-type\.html|\/article\.html/.test(url) ||

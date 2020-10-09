@@ -7,11 +7,11 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10" />
 	<meta name="renderer" content="webkit|ie-comp|ie-stand">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/zui.min.css" />
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/font-awesome.min.css" />
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/element-ui.min.css" />
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/display.min.css" />
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/tools.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/zui.min.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/font-awesome.min.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/element-ui.min.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/display.min.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/tools.css" />
 	<style>
 		.info-row {padding: 100px 0;}
 		.info-row label{width: 100px;text-align: right;margin-bottom: 0;color: #666;font-weight: normal;}
@@ -25,15 +25,15 @@
 				<div class="pt10 pb10">
 					<div class="pub-flex">
 						<div class="logo pub-flex">
-							<a class="block" href="<%= meta.hostName %>">
-								<img class="block" src="<%= meta.hostName %>/upload/logo/logo.png" alt="网站logo图片" />
+							<a class="block" href="<%- meta.hostName %>">
+								<img class="block" src="<%- meta.hostName %>/upload/logo/logo.png" alt="网站logo图片" />
 							</a>
 						</div>
 						<div class="nav-type pl20">
 							<!-- pc导航栏 -->
 							<div class="pc-nav">
 								<% nav.forEach((item, index) => { %>
-								<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%= meta.hostName %><%= item.link %>"><%= item.name %></a>
+								<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%- meta.hostName %><%- item.link %>"><%- item.name %></a>
 								<% }) %>
 							</div>
 							<!--  -->
@@ -54,7 +54,7 @@
 							<!--  -->
 						</div>
 						<div class="operate pub-flex ml10">
-							<div onclick="window.location.href='<%= meta.hostName %>/type.html'" class="btn-ico pr10 pl10 pub-flex pointer">
+							<div onclick="window.location.href='<%- meta.hostName %>/type.html'" class="btn-ico pr10 pl10 pub-flex pointer">
 								<i class="fa fa-list"></i>
 							</div>
 							<% if(!isLogin) { %>
@@ -68,7 +68,7 @@
 								</div>
 								<div class="dropdown-menu pull-right">
 									<div style="width: 230px;" class="pub-flex link text-center">
-										<div class="pub-flex pub-flex1 pub-jc-center pointer" onclick="window.location.href='<%= meta.hostName %>/user.html'">
+										<div class="pub-flex pub-flex1 pub-jc-center pointer" onclick="window.location.href='<%- meta.hostName %>/user.html'">
 											<div class="btn-ico">
 												<i class="fa fa-user"></i>
 											</div>
@@ -113,7 +113,7 @@
 				<!-- mobile导航栏 -->
 				<div class="mobile-nav ov-x-a ov-y-h" style="white-space: nowrap">
 					<% nav.forEach((item, index) => {  %>
-					<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%= meta.hostName %><%= item.link %>"><%= item.name %></a>
+					<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%- meta.hostName %><%- item.link %>"><%- item.name %></a>
 					<% }) %>
 				</div>
 				<!--  -->
@@ -185,14 +185,15 @@
 		</div>
 	</div>
 	<!-- 公共js -->
-	<script src="<%= meta.hostName %>/js/public/jquery.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/zui.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/vue.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/element-ui.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/jquery.cookie.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/clipboard.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/public.js"></script>
-	<script src="<%= meta.hostName %>/js/user/user.js"></script>
+	<script src="<%- meta.hostName %>/js/public/jquery.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/zui.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/vue.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/element-ui.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/jquery.lazyload.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/jquery.cookie.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/clipboard.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/public.js"></script>
+	<script src="<%- meta.hostName %>/js/user/user.js"></script>
 	<!-- 统计，广告等 -->
 	<%- publicCode %>
 </body>

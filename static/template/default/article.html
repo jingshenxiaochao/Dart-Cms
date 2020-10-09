@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8" />
-	<title><%= meta.title %></title>
-	<meta name="keywords" content="<%= meta.keywords %> - <%= meta.title %>" />
-	<meta name="description" content="<%= meta.description %>" />
+	<title><%- meta.title %></title>
+	<meta name="keywords" content="<%- meta.keywords %> - <%- meta.title %>" />
+	<meta name="description" content="<%- meta.description %>" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10" />
 	<meta name="renderer" content="webkit|ie-comp|ie-stand">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/zui.min.css" />
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/element-ui.min.css" />
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/font-awesome.min.css" />
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/display.min.css" />
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/tools.css" />
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/detill.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/zui.min.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/element-ui.min.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/font-awesome.min.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/display.min.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/tools.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/detill.css" />
 	<style>
 		.art-con img{height: auto!important;max-width: 100%!important;}
 	</style>
@@ -26,15 +26,15 @@
 			<div class="pt10 pb10">
 				<div class="pub-flex">
 					<div class="logo pub-flex">
-						<a class="block" href="<%= meta.hostName %>">
-							<img class="block" src="<%= meta.hostName %>/upload/logo/logo.png" alt="网站logo图片" />
+						<a class="block" href="<%- meta.hostName %>">
+							<img class="block" src="<%- meta.hostName %>/upload/logo/logo.png" alt="网站logo图片" />
 						</a>
 					</div>
 					<div class="nav-type pl20">
 						<!-- pc导航栏 -->
 						<div class="pc-nav">
 							<% nav.forEach((item, index) => { %>
-							<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%= meta.hostName %><%= item.link %>"><%= item.name %></a>
+							<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%- meta.hostName %><%- item.link %>"><%- item.name %></a>
 							<% }) %>
 						</div>
 						<!--  -->
@@ -55,7 +55,7 @@
 						<!--  -->
 					</div>
 					<div class="operate pub-flex ml10">
-						<div onclick="window.location.href='<%= meta.hostName %>/type.html'" class="btn-ico pr10 pl10 pub-flex pointer">
+						<div onclick="window.location.href='<%- meta.hostName %>/type.html'" class="btn-ico pr10 pl10 pub-flex pointer">
 							<i class="fa fa-list"></i>
 						</div>
 						<% if(!isLogin) { %>
@@ -69,7 +69,7 @@
 							</div>
 							<div class="dropdown-menu pull-right">
 								<div style="width: 230px;" class="pub-flex link text-center">
-									<div class="pub-flex pub-flex1 pub-jc-center pointer" onclick="window.location.href='<%= meta.hostName %>/user.html'">
+									<div class="pub-flex pub-flex1 pub-jc-center pointer" onclick="window.location.href='<%- meta.hostName %>/user.html'">
 										<div class="btn-ico">
 											<i class="fa fa-user"></i>
 										</div>
@@ -114,7 +114,7 @@
 			<!-- mobile导航栏 -->
 			<div class="mobile-nav ov-x-a ov-y-h" style="white-space: nowrap">
 				<% nav.forEach((item, index) => {  %>
-				<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%= meta.hostName %><%= item.link %>"><%= item.name %></a>
+				<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%- meta.hostName %><%- item.link %>"><%- item.name %></a>
 				<% }) %>
 			</div>
 			<!--  -->
@@ -127,8 +127,8 @@
 			<div>
 				<% mealList.forEach((item) => {  %>
 				<div>
-					<a href="<%= item.link %>">
-						<img style="max-width: 100%;" src="<%= item.path %>" alt="" />
+					<a href="<%- item.link %>">
+						<img style="max-width: 100%;" src="<%- item.path %>" alt="" />
 					</a>
 				</div>
 				<% }) %>
@@ -142,7 +142,7 @@
 			<!-- pc导航栏 -->
 			<div class="pc-nav ov-y-h ov-x-a" style="display: block!important;">
 				<% childNav.forEach((item, index) => { %>
-				<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%= meta.hostName %>/article-type/<%= item._id %>.html"><%= item.name %></a>
+				<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%- meta.hostName %>/article-type/<%- item._id %>.html"><%- item.name %></a>
 				<% }) %>
 			</div>
 		</div>
@@ -155,10 +155,10 @@
 				<!-- 文章内容 -->
 				<div class="card pl20 pr20 pb20 pt20">
 					<div class="art-head">
-						<h1 class="normal"><%= articleResult.cur.articleTitle %></h1>
+						<h1 class="normal"><%- articleResult.cur.articleTitle %></h1>
 						<div class="mt10">
-							<span class="in-block"><%= articleResult.cur.article_type %></span>
-							<span class="in-block"><%= articleResult.cur.update_time %></span>
+							<span class="in-block"><%- articleResult.cur.article_type %></span>
+							<span class="in-block"><%- articleResult.cur.update_time %></span>
 						</div>
 					</div>
 					<div class="art-con mt20" style="font-size: 16px;"><%- articleResult.cur.content %></div>
@@ -171,7 +171,7 @@
 								<p class="text-left" style="color: #cdcdcd;">上一篇</p>
 								<div class="mt10">
 									<% if(articleResult.prev){ %>
-									<a href="<%= meta.hostName %>/article/<%= articleResult.prev._id %>.html"><%= articleResult.prev.articleTitle %></a>
+									<a href="<%- meta.hostName %>/article/<%- articleResult.prev._id %>.html"><%- articleResult.prev.articleTitle %></a>
 									<% }else{ %>
 									<span>暂无</span>
 									<% } %>
@@ -181,7 +181,7 @@
 								<p class="text-right" style="color: #cdcdcd;">下一篇</p>
 								<div class="mt10">
 									<% if(articleResult.next){ %>
-									<a href="<%= meta.hostName %>/article/<%= articleResult.next._id %>.html"><%= articleResult.next.articleTitle %></a>
+									<a href="<%- meta.hostName %>/article/<%- articleResult.next._id %>.html"><%- articleResult.next.articleTitle %></a>
 									<% }else{ %>
 									<span>暂无</span>
 									<% } %>
@@ -203,13 +203,13 @@
 							<div class="col-xs-4 col-sm-4 col-md-3 col-lg-2">
 								<div class="row-col">
 									<div>
-										<a href="<%= meta.hostName %>/detill/<%- item._id %>.html" data-original="<%= item.videoImage %>" style="background-image: url(<%= meta.hostName %>/image/lazy.gif);" class="row-item pr lazy" >
-											<span class="tips"><%= item.remind_tip %></span>
+										<a href="<%- meta.hostName %>/detill/<%- item._id %>.html" data-original="<%- item.videoImage %>" style="background-image: url(<%- meta.hostName %>/image/lazy.gif);" class="row-item pr lazy" >
+											<span class="tips"><%- item.remind_tip %></span>
 											<i class="play-ico"></i>
 										</a>
 										<div class="footer-tip">
-											<h3 class="text-ellipsis"><a href="<%= meta.hostName %>/detill/<%- item._id %>.html"><%= item.videoTitle %></a></h3>
-											<p style="line-height: 16px;" class="mt10 perf text-ellipsis"><%= item.performer %>……</p>
+											<h3 class="text-ellipsis"><a href="<%- meta.hostName %>/detill/<%- item._id %>.html"><%- item.videoTitle %></a></h3>
+											<p style="line-height: 16px;" class="mt10 perf text-ellipsis"><%- item.performer %>……</p>
 										</div>
 									</div>
 								</div>
@@ -222,7 +222,7 @@
 					</div>
 				</div>
 				<!-- 留言 -->
-				<div id="mgs-app" data-info="<%= JSON.stringify({allowReply: allowReply, isLogin: isLogin, videoId: articleResult.cur._id}); %>" class="column-margin">
+				<div id="mgs-app" data-info='<%- JSONstringify({allowReply: allowReply, isLogin: isLogin, videoId: articleResult.cur._id}) %>' class="column-margin">
 					<reply-message type="article"></reply-message>
 				</div>
 			</div>
@@ -239,7 +239,7 @@
 					<div class="mt10">
 						<div class="pub-flex ov-x-h">
 							<div>
-								<a href="<%= meta.hostName %>/detill/<%= videoTop[0]._id %>.html" class="row-item pr lazy" data-original="<%= videoTop[0].videoImage %>" style="width: 95px;background-image: url(/image/lazy.gif);">
+								<a href="<%- meta.hostName %>/detill/<%- videoTop[0]._id %>.html" class="row-item pr lazy" data-original="<%- videoTop[0].videoImage %>" style="width: 95px;background-image: url(/image/lazy.gif);">
 									<i class="play-ico"></i>
 								</a>
 							</div>
@@ -247,10 +247,10 @@
 								<div class="pl20 pr20">
 									<div>
 										<h4 class="link text-ellipsis">
-											<a href="<%= meta.hostName %>/detill/<%= videoTop[0]._id %>.html"><%= videoTop[0].videoTitle %></a>
+											<a href="<%- meta.hostName %>/detill/<%- videoTop[0]._id %>.html"><%- videoTop[0].videoTitle %></a>
 										</h4>
-										<p class="mt10"><span style="color: #666;">导演:</span><%= videoTop[0].director %></p>
-										<p class="text-ellipsis word-wrap mt10"><span style="color: #666;">主演:</span><%= videoTop[0].performer %>……</p>
+										<p class="mt10"><span style="color: #666;">导演:</span><%- videoTop[0].director %></p>
+										<p class="text-ellipsis word-wrap mt10"><span style="color: #666;">主演:</span><%- videoTop[0].performer %>……</p>
 									</div>
 								</div>
 							</div>
@@ -261,9 +261,9 @@
 							<% videoTop.forEach((item3, index) => {  %>
 							<li>
 								<div class="pop-item pub-flex">
-									<i class="num<% if(index == 0) { %> one<% } else if(index == 1) { %> two<% } else if(index == 2) { %> there<% }%>"><%= index + 1 %></i>
-									<a href="<%= meta.hostName %>/detill/<%= item3._id %>.html" class="name pub-flex1 text-ellipsis word-wrap"><%= item3.videoTitle %></a>
-									<span class="type text-ellipsis word-wrap"><%= item3.remind_tip %></span>
+									<i class="num<% if(index == 0) { %> one<% } else if(index == 1) { %> two<% } else if(index == 2) { %> there<% }%>"><%- index + 1 %></i>
+									<a href="<%- meta.hostName %>/detill/<%- item3._id %>.html" class="name pub-flex1 text-ellipsis word-wrap"><%- item3.videoTitle %></a>
+									<span class="type text-ellipsis word-wrap"><%- item3.remind_tip %></span>
 								</div>
 							</li>
 							<% }) %>
@@ -288,9 +288,9 @@
 							<% articleTop.forEach((item3, index) => {  %>
 							<li>
 								<div class="pop-item pub-flex">
-									<i class="num<% if(index == 0) { %> one<% } else if(index == 1) { %> two<% } else if(index == 2) { %> there<% }%>"><%= index + 1 %></i>
-									<a href="<%= meta.hostName %>/article/<%= item3._id %>.html" class="name pub-flex1 text-ellipsis word-wrap"><%= item3.articleTitle %></a>
-<!-- 									<span class="type text-ellipsis word-wrap"><%= item3.remind_tip %></span> -->
+									<i class="num<% if(index == 0) { %> one<% } else if(index == 1) { %> two<% } else if(index == 2) { %> there<% }%>"><%- index + 1 %></i>
+									<a href="<%- meta.hostName %>/article/<%- item3._id %>.html" class="name pub-flex1 text-ellipsis word-wrap"><%- item3.articleTitle %></a>
+<!-- 									<span class="type text-ellipsis word-wrap"><%- item3.remind_tip %></span> -->
 								</div>
 							</li>
 							<% }) %>
@@ -382,16 +382,16 @@
 	</div>
 	<% } %>
 	<!-- 公共js -->
-	<script src="<%= meta.hostName %>/js/public/jquery.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/zui.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/vue.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/element-ui.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/jquery.cookie.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/jquery.lazyload.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/clipboard.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/public.js"></script>
-	<script src="<%= meta.hostName %>/js/detill/message.js"></script>
-	<script src="<%= meta.hostName %>/js/public/baidu-push.js"></script>
+	<script src="<%- meta.hostName %>/js/public/jquery.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/zui.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/vue.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/element-ui.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/jquery.cookie.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/jquery.lazyload.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/clipboard.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/public.js"></script>
+	<script src="<%- meta.hostName %>/js/detill/message.js"></script>
+	<script src="<%- meta.hostName %>/js/public/baidu-push.js"></script>
 	<!-- 统计，广告等 -->
 	<%- publicCode %>
 </body>

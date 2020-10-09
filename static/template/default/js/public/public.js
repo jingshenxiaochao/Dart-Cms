@@ -97,7 +97,7 @@
 		    success : function(data){
 		        if(data.code === 200){
 		        	setTimeout(function(){
-		        		w.location.reload()
+		        		w.location.href = '/';
 		        	}, 300)
 		        }
 		    },

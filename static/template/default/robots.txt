@@ -1,4 +1,4 @@
-# robots.txt generated at http://tool.chinaz.com/robots/
+Sitemap: /sitemap.xml
 User-agent: Baiduspider
 Disallow:
 User-agent: Sosospider
@@ -41,4 +41,3 @@ Disallow: /app/
 Disallow: /manage/
 Disallow: /public/
 Disallow: /user/
-Sitemap: /sitemap.xml

@@ -16,6 +16,9 @@
 			}
 		},
 		methods: {
+			createLink: function(hostName, id){
+				window.location.href = `hostName/detill/${item._id}.html`;
+			},
 			changePage: function(num){
 				var newParem = window.getQueryData(false, true);
 				newParem['page'] = num;

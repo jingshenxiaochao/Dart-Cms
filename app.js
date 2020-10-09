@@ -6,7 +6,9 @@ const body = require('koa-body');
 const bodyParser = require('koa-bodyparser');
 const compress = require('koa-compress');
 const views = require('koa-views');
-const ejs = require('ejs');
+// const ejs = require('ejs');
+const template = require('art-template');
+const render = require('koa-art-template');
 const tokenStore = require('./utils/token/koa-token-store');
 const cookieStore = require('./utils/cookie/koa-cookie-store');
 
@@ -50,10 +52,19 @@ app.use(filterUserIp())
 // 纯静态检查
 app.use(openStatic())
 // 模板引擎ejs
-app.use(views(
-	path.resolve(__dirname, './static/template'),
-	{ map: {html: 'ejs' }}
-))
+// app.use(views(
+// 	path.resolve(__dirname, './static/template'),
+// 	{ map: {html: 'ejs' }}
+// ))
+// 模板引擎art-template
+render(app, {
+    root: path.resolve(__dirname, './static/template'),  // 视图的位置
+    extname: '.html', // 文件的后缀名字
+    // debug: process.env.NODE_ENV !== 'production'
+});
+
+template.defaults.imports.JSONstringify = JSON.stringify;
+template.defaults.imports.Mathceil = Math.ceil;
 // 静态文件
 app.use(static(
   	path.join( __dirname,  './static'),

@@ -2,23 +2,23 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8" />
-	<title><%= meta.title %></title>
-	<meta name="keywords" content="<%= meta.keywords %> - <%= meta.title %>" />
-	<meta name="description" content="<%= meta.description %>" />
+	<title><%- meta.title %></title>
+	<meta name="keywords" content="<%- meta.keywords %> - <%- meta.title %>" />
+	<meta name="description" content="<%- meta.description %>" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10" />
 	<meta name="renderer" content="webkit|ie-comp|ie-stand">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/zui.min.css" />
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/font-awesome.min.css" />
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/element-ui.min.css" />
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/display.min.css" />
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/public/tools.css" />
-	<link rel="stylesheet" href="<%= meta.hostName %>/css/type.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/zui.min.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/font-awesome.min.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/element-ui.min.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/display.min.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/public/tools.css" />
+	<link rel="stylesheet" href="<%- meta.hostName %>/css/type.css" />
 	<script>
 		window.configData = {
-			allTypeItem: <%- JSON.stringify(allTypeItem) %>,
-			curQueryList: <%- JSON.stringify(curQueryList) %>,
+			allTypeItem: <%- $imports.JSONstringify(allTypeItem); %>,
+			curQueryList: <%- $imports.JSONstringify(curQueryList); %>,
 		}
 	</script>
 </head>
@@ -30,15 +30,15 @@
 				<div class="pt10 pb10">
 					<div class="pub-flex">
 						<div class="logo pub-flex">
-							<a class="block" href="<%= meta.hostName %>">
-								<img class="block" src="<%= meta.hostName %>/upload/logo/logo.png" alt="网站logo图片" />
+							<a class="block" href="<%- meta.hostName %>">
+								<img class="block" src="<%- meta.hostName %>/upload/logo/logo.png" alt="网站logo图片" />
 							</a>
 						</div>
 						<div class="nav-type pl20">
 							<!-- pc导航栏 -->
 							<div class="pc-nav">
 								<% nav.forEach((item, index) => { %>
-								<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%= meta.hostName %><%= item.link %>"><%= item.name %></a>
+								<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%- meta.hostName %><%- item.link %>"><%- item.name %></a>
 								<% }) %>
 							</div>
 							<!--  -->
@@ -59,7 +59,7 @@
 							<!--  -->
 						</div>
 						<div class="operate pub-flex ml10">
-							<div onclick="window.location.href='<%= meta.hostName %>/type.html'" class="btn-ico pr10 pl10 pub-flex pointer">
+							<div onclick="window.location.href='<%- meta.hostName %>/type.html'" class="btn-ico pr10 pl10 pub-flex pointer">
 								<i class="fa fa-list"></i>
 							</div>
 							<% if(!isLogin) { %>
@@ -73,7 +73,7 @@
 								</div>
 								<div class="dropdown-menu pull-right">
 									<div style="width: 230px;" class="pub-flex link text-center">
-										<div class="pub-flex pub-flex1 pub-jc-center pointer" onclick="window.location.href='<%= meta.hostName %>/user.html'">
+										<div class="pub-flex pub-flex1 pub-jc-center pointer" onclick="window.location.href='<%- meta.hostName %>/user.html'">
 											<div class="btn-ico">
 												<i class="fa fa-user"></i>
 											</div>
@@ -118,7 +118,7 @@
 				<!-- mobile导航栏 -->
 				<div class="mobile-nav ov-x-a ov-y-h" style="white-space: nowrap">
 					<% nav.forEach((item, index) => {  %>
-					<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%= meta.hostName %><%= item.link %>"><%= item.name %></a>
+					<a class="<% if(item.active) { %>active<% } else { %> <% } %>" href="<%- meta.hostName %><%- item.link %>"><%- item.name %></a>
 					<% }) %>
 				</div>
 				<!--  -->
@@ -131,8 +131,8 @@
 				<div>
 					<% mealList.forEach((item) => {  %>
 					<div>
-						<a href="<%= item.link %>">
-							<img style="max-width: 100%;" src="<%= item.path %>" alt="" />
+						<a href="<%- item.link %>">
+							<img style="max-width: 100%;" src="<%- item.path %>" alt="" />
 						</a>
 					</div>
 					<% }) %>
@@ -147,46 +147,46 @@
 					<div v-if="types" class="type-con">
 						<!-- 导航 -->
 						<div class="pub-flex type-row">
-							<label for="" style="font-weight: normal;margin-bottom: 0;">{{ types.nav.label }}</label>
+							<label for="" style="font-weight: normal;margin-bottom: 0;" v-html="types.nav.label"></label>
 							<div class="pub-flex1 ov-x-a col-link">
 								<div class="pub-flex type-row-col">
-									<a @click="changeSearchQuery(item, 'pid')" :class="item.active ? 'active' : ''" v-for="item in types.nav.list">{{ item.name }}</a>
+									<a @click="changeSearchQuery(item, 'pid')" :class="item.active ? 'active' : ''" v-for="item in types.nav.list" v-html="item.name"></a>
 								</div>
 							</div>
 						</div>
 						<!-- 分类 -->
 						<div class="pub-flex type-row">
-							<label for="" style="font-weight: normal;margin-bottom: 0;">{{ types.type.label }}</label>
+							<label for="" style="font-weight: normal;margin-bottom: 0;" v-html="types.type.label"></label>
 							<div class="pub-flex1 ov-x-a col-link">
 								<div class="pub-flex type-row-col">
-									<a @click="changeSearchQuery(item, 'cid')" :class="item.active ? 'active' : ''" v-for="item in types.type.list">{{ item.name }}</a>
+									<a @click="changeSearchQuery(item, 'cid')" :class="item.active ? 'active' : ''" v-for="item in types.type.list" v-html="item.name"></a>
 								</div>
 							</div>
 						</div>
 						<!-- 年代 -->
 						<div class="pub-flex type-row">
-							<label for="" style="font-weight: normal;margin-bottom: 0;">{{ types.years.label }}</label>
+							<label for="" style="font-weight: normal;margin-bottom: 0;" v-html="types.years.label"></label>
 							<div class="pub-flex1 ov-x-a col-link">
 								<div class="pub-flex type-row-col">
-									<a @click="changeSearchQuery(item, 'rel_time')" :class="item.active ? 'active' : ''" v-for="item in types.years.list">{{ item.name }}</a>
+									<a @click="changeSearchQuery(item, 'rel_time')" :class="item.active ? 'active' : ''" v-for="item in types.years.list" v-html="item.name"></a>
 								</div>
 							</div>
 						</div>
 						<!-- 地区 -->
 						<div class="pub-flex type-row">
-							<label for="" style="font-weight: normal;margin-bottom: 0;">{{ types.region.label }}</label>
+							<label for="" style="font-weight: normal;margin-bottom: 0;" v-html="types.region.label"></label>
 							<div class="pub-flex1 ov-x-a col-link">
 								<div class="pub-flex type-row-col">
-									<a @click="changeSearchQuery(item, 'sub_region')" :class="item.active ? 'active' : ''" v-for="item in types.region.list">{{ item.name }}</a>
+									<a @click="changeSearchQuery(item, 'sub_region')" :class="item.active ? 'active' : ''" v-for="item in types.region.list" v-html="item.name"></a>
 								</div>
 							</div>
 						</div>
 						<!-- 语言 -->
 						<div class="pub-flex type-row">
-							<label for="" style="font-weight: normal;margin-bottom: 0;">{{ types.language.label }}</label>
+							<label for="" style="font-weight: normal;margin-bottom: 0;" v-html="types.language.label"></label>
 							<div class="pub-flex1 ov-x-a col-link">
 								<div class="pub-flex type-row-col">
-									<a @click="changeSearchQuery(item, 'language')" :class="item.active ? 'active' : ''" v-for="item in types.language.list">{{ item.name }}</a>
+									<a @click="changeSearchQuery(item, 'language')" :class="item.active ? 'active' : ''" v-for="item in types.language.list" v-html="item.name"></a>
 								</div>
 							</div>
 						</div>
@@ -199,18 +199,18 @@
 					</div>
 					<!-- 内容 -->
 					<div v-if="content.list.length && content.total">
-						<el-row :gutter="10">
-							<el-col v-for="item in content.list" :xs="8" :sm="8" :md="6" :lg="4">
+						<el-row v-bind:gutter="10">
+							<el-col v-for="item in content.list" v-bind:xs="8" v-bind:sm="8" v-bind:md="6" v-bind:lg="4">
 								<div class="row-col">
 									<div class="row-col">
 										<div>
-											<a :href="`<%= meta.hostName %>/detill/${item._id}.html`" class="row-item pr lazy" :data-original="item.videoImage" style="background-image: url(<%= meta.hostName %>/image/lazy.gif);">
-												<span class="tips">{{ item.remind_tip }}</span>
+											<a v-on:click="createLink('<%- meta.hostName %>', item._id);" class="row-item pr lazy" v-bind:data-original="item.videoImage" style="background-image: url(<%- meta.hostName %>/image/lazy.gif);">
+												<span class="tips" v-html="item.remind_tip"></span>
 												<i class="play-ico"></i>
 											</a>
 											<div class="footer-tip">
-												<h3 class="text-ellipsis"><a :href="`<%= meta.hostName %>/detill/${item._id}.html`">{{ item.videoTitle }}</a></h3>
-												<p style="line-height: 16px;" class="mt10 perf text-ellipsis">{{ item.performer }}……</p>
+												<h3 class="text-ellipsis"><a v-on:click="createLink('<%- meta.hostName %>', item._id)" v-html="item.videoTitle"></a></h3>
+												<p style="line-height: 16px;min-height: 16px;" class="mt10 perf text-ellipsis" v-html="item.performer"></p>
 											</div>
 										</div>
 									</div>
@@ -314,15 +314,15 @@
 		<% } %>
 	</div>
 	<!-- 公共js -->
-	<script src="<%= meta.hostName %>/js/public/jquery.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/vue.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/zui.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/element-ui.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/jquery.cookie.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/jquery.lazyload.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/clipboard.min.js"></script>
-	<script src="<%= meta.hostName %>/js/public/public.js"></script>
-	<script src="<%= meta.hostName %>/js/type/type.js"></script>
+	<script src="<%- meta.hostName %>/js/public/jquery.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/vue.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/zui.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/element-ui.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/jquery.cookie.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/jquery.lazyload.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/clipboard.min.js"></script>
+	<script src="<%- meta.hostName %>/js/public/public.js"></script>
+	<script src="<%- meta.hostName %>/js/type/type.js"></script>
 	<!-- 统计，广告等 -->
 	<%- publicCode %>
 </body>
