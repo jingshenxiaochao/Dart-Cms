@@ -18,10 +18,10 @@ let R = route.prefix('/app');
 
 // app首页
 R.get('/getTypeList', getTypeList);
-// 获取首页每个分类的详细数据
+// 获取每个视频分类的详细数据
 R.get('/getCurNavItemList/:nid', getCurNavItemList);
-// 获取文章列表
-R.get('/getAllArtItemList', getAllArtItemList);
+// 获取所有文章分类的详细数据
+R.get('/getAllArtItemList/', getAllArtItemList);
 // app播放页
 R.get('/getDetillData/:vid', getDetillData);
 // app文章详情页

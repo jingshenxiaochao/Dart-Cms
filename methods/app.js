@@ -15,7 +15,9 @@ let getTypeList = async (ctx, next) => {
 	let otherColl = getDB().collection('other');
 	let config = await confColl.findOne({});
 
-	let allNav = await otherColl.find({type: 'nav_type', parent_id: false, display: true, nav_type: "video"}).sort({index: 1}).toArray();
+	let { type = "video" } = ctx.query;
+
+	let allNav = await otherColl.find({type: 'nav_type', parent_id: false, display: true, nav_type: type}).sort({index: 1}).toArray();
 	let createNavResult = createNavType(allNav, '0');
 	let navData = createNavResult.arr;
 
