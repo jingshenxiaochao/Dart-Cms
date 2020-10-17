@@ -29,6 +29,9 @@ app.use(async (ctx, next) => {
 				let posHour = posTime[2];
 				// 计算时区差异 + 计算差值
 				if(posHour !== '*'){
+					// int
+					posHour = Number(posHour);
+					// 计算时差
 					let clientHour = new Date(clientTime).getHours();
 					let serverHour = new Date(serverTime).getHours();
 					// 说明服务器和用户不在一个时区
@@ -36,9 +39,13 @@ app.use(async (ctx, next) => {
 					let minHour = clientHour < serverHour ? clientHour : serverHour;
 					// max - min = gap
 					let gapHour = maxHour - minHour;
-					let resultHour = clientHour > serverHour ? (clientHour - gapHour) : (clientHour + gapHour);
-					posTime[2] = resultHour;
-					time = posTime.join(' ');
+					// 时区差
+					if(clientHour > serverHour){
+						posTime[2] = posHour - gapHour;
+					}else if(clientHour < serverHour){
+						posTime[2] = posHour + gapHour;
+					}
+					time = initTime = posTime.join(' ');
 				}
 
 

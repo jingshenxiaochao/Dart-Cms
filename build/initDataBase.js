@@ -58,15 +58,20 @@ client.then(async (db) => {
 
     await new Promise(async (resolve, reject) => {
         console.log('开始创建文章数据');
-        // 视频分类字段索引
-        let videoInfoColl = DB.collection('article_info');
-        await videoInfoColl.createIndexes([
+        // 文章信息
+        let articleInfoColl = DB.collection('article_info');
+        let articleListColl = DB.collection('article_list');
+        await articleInfoColl.createIndexes([
+            {key:{_id: 1}},
             {key:{article_title: 1}},
             {key:{article_image: 1}},
             {key:{allow_reply: 1}},
             {key:{content_id: 1}},
             {key:{openSwiper: 1}},
-            {key:{display: 1}}
+            {key:{display: 1}},
+        ]);
+        await articleListColl.createIndexes([
+            {key:{_id: 1}},
         ]);
         resolve();
     })
@@ -118,11 +123,13 @@ client.then(async (db) => {
         // 视频分类字段索引
 		let videoInfoColl = DB.collection('video_info');
         await videoInfoColl.createIndexes([
+            {key:{_id: 1}},
             {key:{video_type: 1}},
             {key:{rel_time: 1}},
             {key:{update_time: 1}},
+            {key:{display: 1}},
             {key:{sub_region: 1}},
-            {key:{language: 1}}
+            {key:{language: 1}},
         ]);
         resolve();
 	})
@@ -134,9 +141,12 @@ client.then(async (db) => {
         console.log('开始创建日志数据');
         // 日志分类字段索引  一周
         let logsColl = DB.collection('logs');
+        await logsColl.createIndexes([
+            {key:{_id: 1}},
+        ]);
         await logsColl.createIndex(
-          { loginDate: 1 },
-          { name: 'log_idx', expireAfterSeconds: 604800 }
+            {loginDate: 1},
+            {name:'log_idx',expireAfterSeconds: 604800}
         );
         resolve();
     })
@@ -148,6 +158,10 @@ client.then(async (db) => {
         console.log('开始创建分类数据');
         // 视频分类字段索引
         let otherColl = DB.collection('other');
+        await otherColl.createIndexes([
+            {key:{_id: 1}},
+            {key:{type: 1}},
+        ]);
         // 分类 => 电影
         await otherColl.insertOne({
             name: '电影',
@@ -690,6 +704,7 @@ client.then(async (db) => {
         // 源alias索引
         let videoListColl = DB.collection('video_list');
         await videoListColl.createIndexes([
+            {key:{_id: 1}},
             {key:{vid: 1}},
             {key:{z_name: 1}},
         ]);
@@ -704,10 +719,11 @@ client.then(async (db) => {
         // 留言字段索引
         let msgColl =  DB.collection('message');
         await msgColl.createIndexes([
+            {key:{_id: 1}},
             {key:{vid: 1}},
             {key:{pid: 1}},
             {key:{uid: 1}},
-            {key:{wid: 1}}
+            {key:{wid: 1}},
         ]);
         resolve();
     })
@@ -720,6 +736,7 @@ client.then(async (db) => {
         // 用户字段索引
         let userColl =  DB.collection('user');
         await userColl.createIndexes([
+            {key:{_id: 1}},
             {key:{userName: 1}},
             {key:{passWord: 1}},
             {key:{display: 1}},
