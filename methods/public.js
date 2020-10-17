@@ -4,7 +4,7 @@ const fs = require('fs');
 const fse = require('fs-extra');
 
 const getDB = require('../utils/baseConnect');
-const { setResponse, makeArrObjectID, mixinsScriptConfig, encryption, createTokenID, getBjDate, dirCatImgs, placeUploadImg } = require('../utils/tools');
+const { setResponse, makeArrObjectID, mixinsScriptConfig, encryption, createTokenID, getBjDate, dirCatImgs, placeUploadImg, filterXSS } = require('../utils/tools');
 
 
 let createNavType = (nav, navId) => {
@@ -1112,17 +1112,6 @@ let getMessageList = async (ctx, next) => {
 
 	}
 
-}
-// 过滤字符串
-function filterXSS(str) {
-	return str
-	.replace(/&/g, '&amp;')
-	.replace(/ /g, '&nbsp;')
-	.replace(/</g, '&lt;')
-	.replace(/>/g, '&gt;')
-	.replace(/"/g, '&quot;')
-	.replace(/'/g, '&#39;')
-	.replace(/\r{0,}\n/g, '<br/>')
 }
 // 提交评价内容
 let submitMessage = async (ctx, next) => {

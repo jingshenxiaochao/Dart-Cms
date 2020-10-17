@@ -144,8 +144,21 @@ let placeUploadImg = async (catName, file) => {
 	})
 }
 
+// 过滤xss字符串
+function filterXSS(str) {
+	return str
+	.replace(/&/g, '&amp;')
+	.replace(/ /g, '&nbsp;')
+	.replace(/</g, '&lt;')
+	.replace(/>/g, '&gt;')
+	.replace(/"/g, '&quot;')
+	.replace(/'/g, '&#39;')
+	.replace(/\r{0,}\n/g, '<br/>')
+}
+
 module.exports = {
 	getBjDate,
+	filterXSS,
 	findUserID,
 	encryption,
 	setResponse,
