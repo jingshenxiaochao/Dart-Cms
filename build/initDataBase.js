@@ -91,7 +91,7 @@ client.then(async (db) => {
             "notice" : "<p>请勿相信视频中的广告</p>",
             "publicCode" : "",
             "openStatic" : false,
-            "openSwiper" : false,
+            "openSwiper" : true,
             "isBjTime" : true,
             "allowReply" : false,
             "replyInterval" : 5,
