@@ -92,16 +92,16 @@ let mainFn = async (DB) => {
 		   	await new Promise(async (res, rej) => {
 		   		let allTopNavList = await otherColl.find({type: 'nav_type', parent_id: false, display: true}).toArray();
 		   		for(let arg of allTopNavList){
-			   		let curNavRes = await http(`${domain}/nav/${arg._id}.html`);
+			   		let curNavRes = await http(`${domain}/video-type/${arg._id}.html`);
 				   	if(curNavRes.status === 200){
-				   		let navCatPath = path.resolve(cachePath, './nav');
+				   		let navCatPath = path.resolve(cachePath, './video-type');
 				   		let navCatExist = fse.existsSync(navCatPath);
 				   		if(!navCatExist){
 				   			fse.mkdirSync(navCatPath);
 				   		}
-				   		let curNavFilePath = path.resolve(cachePath, `./nav/${arg._id}.html`);
+				   		let curNavFilePath = path.resolve(cachePath, `./video-type/${arg._id}.html`);
 				   		fse.writeFileSync(curNavFilePath, curNavRes.data.replace(/http:\/\/localhost:9999/gi, domain));
-				   		console.log(`/nav/${arg._id}.html`);
+				   		console.log(`/video-type/${arg._id}.html`);
 				   	}
 		   		}
 		   		res();
