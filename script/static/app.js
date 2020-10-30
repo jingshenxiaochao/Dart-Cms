@@ -41,6 +41,7 @@ let mainFn = async (DB) => {
 	// 如果正在运行，直接退出，确保安全
 	let curConfPath = path.resolve(__dirname, './config.json');
 	let runConf = fse.readJsonSync(curConfPath);
+	let scriptAlias = runConf.alias;
 	if(runConf.state){
 		process.exit();
 	}
@@ -60,12 +61,18 @@ let mainFn = async (DB) => {
 	   	let configData = await confColl.findOne({}); //
 		let isBJtime = configData.isBjTime;          //
 		let cachePath = path.resolve(__dirname, '../../static/cache');
+		// 删除cache文件夹下的所有文件
+		await fse.emptyDir(cachePath).catch(() => {
+			console.log('cache文件夹清空失败');
+			process.exit();
+		});
+		// 读取域配置
 		let domain = Sconfig.options.domain.val;
 
 		// 开始采集 => 配置中保存当前子进程的pid，用于手动停止
 	   	// 开始采集 => 保存当前运行脚本时间
 	   	// 开始采集 => 脚本状态设置为已启动
-	   	mixinsScriptConfig('static', {state: true, pid: process.pid, runTime: dateStringify(isBJtime)});
+	   	mixinsScriptConfig(scriptAlias, {state: true, pid: process.pid, runTime: dateStringify(isBJtime)});
 
 		// 首页
 		if(Sconfig.options.home.val){
@@ -73,7 +80,7 @@ let mainFn = async (DB) => {
 		   		let indexRes = await http(`${domain}/index.html`);
 			   	if(indexRes.status === 200){
 			   		let indexFilePath = path.resolve(cachePath, './index.html');
-			   		fse.writeFileSync(indexFilePath, indexRes.data);
+			   		fse.writeFileSync(indexFilePath, indexRes.data.replace(/http:\/\/localhost:9999/gi, domain));
 			   	}
 			   	res();
 		   	}).catch((err) => {
@@ -93,7 +100,7 @@ let mainFn = async (DB) => {
 				   			fse.mkdirSync(navCatPath);
 				   		}
 				   		let curNavFilePath = path.resolve(cachePath, `./nav/${arg._id}.html`);
-				   		fse.writeFileSync(curNavFilePath, curNavRes.data);
+				   		fse.writeFileSync(curNavFilePath, curNavRes.data.replace(/http:\/\/localhost:9999/gi, domain));
 				   		console.log(`/nav/${arg._id}.html`);
 				   	}
 		   		}
@@ -118,7 +125,7 @@ let mainFn = async (DB) => {
 					   			fse.mkdirSync(detillCatPath);
 					   		}
 					   		let curDetillFilePath = path.resolve(cachePath, `./detill/${arg2._id}.html`);
-					   		fse.writeFileSync(curDetillFilePath, curDetillVideoRes.data);
+					   		fse.writeFileSync(curDetillFilePath, curDetillVideoRes.data.replace(/http:\/\/localhost:9999/gi, domain));
 					   		console.log(`/detill/${arg2._id}.html`);
 					   	}
 			   		}
@@ -144,7 +151,7 @@ let mainFn = async (DB) => {
 					   			fse.mkdirSync(playCatPath);
 					   		}
 					   		let curPlayFilePath = path.resolve(cachePath, `./play/${arg2._id}.html`);
-					   		fse.writeFileSync(curPlayFilePath, curPlayVideoRes.data);
+					   		fse.writeFileSync(curPlayFilePath, curPlayVideoRes.data.replace(/http:\/\/localhost:9999/gi, domain));
 					   		console.log(`/play/${arg2._id}.html`);
 					   	}
 			   		}
@@ -160,13 +167,13 @@ let mainFn = async (DB) => {
 		resolve();
 	}).then(res => {
 		// 把采集状态 改成 停止
-		mixinsScriptConfig('static', {state: false});
+		mixinsScriptConfig(scriptAlias, {state: false});
 		// 停止
 		process.exit();
 	}).catch(err => {
 		console.log(err);
 		// 把采集状态 改成 停止
-		mixinsScriptConfig('static', {state: false});
+		mixinsScriptConfig(scriptAlias, {state: false});
 		// 停止
 		process.exit();
 	})

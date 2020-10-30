@@ -101,6 +101,7 @@ let mainFn = async (DB) => {
 	// 如果正在运行，直接退出，确保安全
 	let curConfPath = path.resolve(__dirname, './config.json');
 	let runConf = fse.readJsonSync(curConfPath);
+	let scriptAlias = runConf.alias;
 	if(runConf.state){
 		process.exit();
 	}
@@ -122,7 +123,7 @@ let mainFn = async (DB) => {
 		// 开始采集 => 配置中保存当前子进程的pid，用于手动停止
 	   	// 开始采集 => 保存当前运行脚本时间
 	   	// 开始采集 => 脚本状态设置为已启动
-	   	mixinsScriptConfig('qiniu-cdn', {state: true, pid: process.pid, runTime: dateStringify(isBJtime)});
+	   	mixinsScriptConfig(scriptAlias, {state: true, pid: process.pid, runTime: dateStringify(isBJtime)});
 
 	   	await execFn(videoInfoColl);
 
@@ -131,13 +132,13 @@ let mainFn = async (DB) => {
 		resolve();
 	}).then(res => {
 		// 把采集状态 改成 停止
-		mixinsScriptConfig('qiniu-cdn', {state: false});
+		mixinsScriptConfig(scriptAlias, {state: false});
 		// 停止
 		process.exit();
 	}).catch(err => {
 		console.log(err);
 		// 把采集状态 改成 停止
-		mixinsScriptConfig('qiniu-cdn', {state: false});
+		mixinsScriptConfig(scriptAlias, {state: false});
 		// 停止
 		process.exit();
 	})
