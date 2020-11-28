@@ -33,6 +33,11 @@
 
 [安卓APP使用google flutter技术开发](https://github.com/abcd498936590/Dart-Cms-Flutter)
 
+## vue + php 半天时间搞个音乐项目
+
+[半天vue音乐爬虫项目](https://github.com/abcd498936590/spider-music)
+
+
 ## 插件
 
 Cms默认只有 封面上传七牛cdn、静态资源生成、播放源url替换 三个插件
