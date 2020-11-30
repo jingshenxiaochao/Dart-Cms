@@ -69,7 +69,7 @@ template.defaults.imports.Mathceil = Math.ceil;
 app.use(static(
   	path.join( __dirname,  './static'),
   	{
-  		maxage: 86400000
+  		maxage: 3600000
   	}
 ))
 // 矫正静态化以后，没有找到的文件，路由回正，走查询数据库

@@ -19,7 +19,6 @@ module.exports = (ctx, next) => {
 		// 如果不是后台
 		if(isCacheStatic && isTempHome || isCacheStatic &&  isTempNav || isCacheStatic &&  isTempDetill || isCacheStatic &&  isTempPlay){
 			ctx.request.url = `/cache${url}`;
-			console.log(ctx.request.url);
 		}
 
 		await next()
