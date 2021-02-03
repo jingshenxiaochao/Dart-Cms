@@ -38,6 +38,10 @@
 
 [flutter fijkplayer 的一款皮肤](https://github.com/abcd498936590/fijkplayer_skin)
 
+## Dart-Cms-Script（插件）
+
+[Dart-CMS采集插件](https://github.com/abcd498936590/Dart-Cms-Script)
+
 ## vue + php 半天时间搞个音乐项目
 
 [半天vue音乐爬虫项目](https://github.com/abcd498936590/spider-music)
