@@ -36,7 +36,7 @@
 
 ## fijkplayer_skin（fijkplayer皮肤）
 
-[fpluuter fijkplayer 的一款皮肤](https://github.com/abcd498936590/fijkplayer_skin)
+[flutter fijkplayer 的一款皮肤](https://github.com/abcd498936590/fijkplayer_skin)
 
 ## vue + php 半天时间搞个音乐项目
 
